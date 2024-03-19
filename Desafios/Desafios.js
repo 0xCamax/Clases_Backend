@@ -33,22 +33,26 @@ class ProductManager {
         await fs.promises.writeFile(this.path, prodJSON, 'utf8');
     }
 
-    delProduct (id) {
+
+    async delProduct(id) {
         try {
-            let produ = this.getProductsById(id)
-            this.#products.splice(this.getProducts().indexOf(prod => prod.id == id))
-            return console.log(`Se elimino el producto id: ${produ.title}`)
+            let delProd = await this.getJSON()
+            const nuevoJSON = delProd.filter(prod => prod.id !== id);
+            const acutualizarJSON = JSON.stringify(nuevoJSON, null, 4);
+            await fs.promises.writeFile(this.path, acutualizarJSON, 'utf-8');
+            console.log(`Objeto con ID ${id} eliminado correctamente.`);
         } catch (error) {
-            return console.error(error)
+            console.error('Error al eliminar el objeto:', error);
         }
     }
+
 
     async updateProduct(id, modificar = {}) {
         let propiedadesValidas = ["title", "descripcion", "price", "thumbnail", "code", "stock"]
         let propiedades = Object.keys(modificar)
         let valido = propiedades.every(prop => propiedadesValidas.includes(prop))
         if (valido){
-            let prodIndex = this.getProducts().findIndex(prod => prod.id == id)
+            let prodIndex = this.#products.findIndex(prod => prod.id == id)
             this.#products[prodIndex] = {
                 ...this.getProductsById(id),
                 ...modificar, 
@@ -56,6 +60,7 @@ class ProductManager {
             }
         let prodJSON = JSON.stringify(this.#products, null, 4)
         await fs.promises.writeFile(this.path, prodJSON, 'utf8');
+        console.log(`Se actualizo el producto ID: ${this.#products[prodIndex].id}`)
         } else {
             return console.log(`Las proiedades validas a modificar son: ${propiedadesValidas.join(", ")}`)
         }
@@ -63,7 +68,7 @@ class ProductManager {
     }
 
     getProducts() {
-        return this.#products;
+        return this.#products
     }
 
     

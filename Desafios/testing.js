@@ -24,7 +24,11 @@ producto.addProduct("producto prueba", "Este es el producto prueba", 200, "Sin i
 producto.addProduct("producto prueba", "Este es el producto prueba", 200, "Sin imagen", "abc126", 25)
 producto.addProduct("producto prueba", "Este es el producto prueba", 200, "Sin imagen", "abc128", 25)
 
+
+
 producto.updateProduct(2, modificar={price: 300})
+producto.delProduct(4)
+
 
 
 
