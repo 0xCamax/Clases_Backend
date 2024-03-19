@@ -67,8 +67,13 @@ class ProductManager {
         
     }
 
-    getProducts() {
-        return this.#products
+    async getProducts() {
+        try {
+            await this.setProductos()
+            return this.#products
+        } catch (error) {
+            console.log(error)
+        }
     }
 
     
