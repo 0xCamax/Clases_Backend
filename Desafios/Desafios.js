@@ -31,18 +31,20 @@ class ProductManager {
         }
         let prodJSON = JSON.stringify(this.#products, null, 4)
         await fs.promises.writeFile(this.path, prodJSON, 'utf8');
+        return
     }
 
 
     async delProduct(id) {
         try {
-            let delProd = await this.getJSON()
+            let delProd = await this.getProducts()
             const nuevoJSON = delProd.filter(prod => prod.id !== id);
             const acutualizarJSON = JSON.stringify(nuevoJSON, null, 4);
             await fs.promises.writeFile(this.path, acutualizarJSON, 'utf-8');
             console.log(`Objeto con ID ${id} eliminado correctamente.`);
         } catch (error) {
             console.error('Error al eliminar el objeto:', error);
+            return
         }
     }
 
@@ -62,47 +64,30 @@ class ProductManager {
         await fs.promises.writeFile(this.path, prodJSON, 'utf8');
         console.log(`Se actualizo el producto ID: ${this.#products[prodIndex].id}`)
         } else {
-            return console.log(`Las proiedades validas a modificar son: ${propiedadesValidas.join(", ")}`)
+            console.log(`Las proiedades validas a modificar son: ${propiedadesValidas.join(", ")}`)
+            return 
         }
         
     }
 
     async getProducts() {
         try {
-            await this.setProductos()
-            return this.#products
-        } catch (error) {
-            console.log(error)
-        }
-    }
-
-    
-    getProductsById(id) {
-        let prod = this.#products.find(p => p.id === id) 
-        return prod ? prod : "Not found"
-    }
-    
-    async setProductos () {
-        try {
-            this.#products = await this.getJSON()
-        } catch (error) {
-            console.log(error)
-        }
-    }
-    
-    async getJSON() {
-        try {
-            const fileExists = fs.existsSync(this.path)
-            if (fileExists) {
+            if (fs.existsSync(this.path)) {
                 let prod = await fs.promises.readFile(this.path, "utf-8")
-                const jsonProd = JSON.parse(prod)
+                let jsonProd = JSON.parse(prod)
+                this.#products = jsonProd
                 return jsonProd 
             } else {
                 return []
             }
         } catch (error) {
-            console.log(error)
+            return error
         }
+    }
+    
+    getProductsById(id) {
+        let prod = this.#products.find(p => p.id === id) 
+        return prod ? prod : "Not found"
     }
 }
 
