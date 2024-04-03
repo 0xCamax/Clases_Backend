@@ -63,7 +63,7 @@ router.put("/:pid", async (req, res) => {
     try {
         let { pid } = req.params
 
-        let update = await productManager.update(pid, req.body)
+        await productManager.update(pid, req.body)
         res.setHeader("Content-Type", "aplication/json")
         return res.status(200).json({
             detalle: "Producto modificado",
