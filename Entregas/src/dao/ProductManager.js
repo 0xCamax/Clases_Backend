@@ -41,6 +41,8 @@ export class ProductManager {
                     }
                     let index = this.products.findIndex(p => p.id == pid)
                     this.products[index] = updateProd
+                    writeFile(this.path, JSON.stringify(this.products, null, 4), "utf-8")
+                    return {updateProd, update}
                 }
             }
         }

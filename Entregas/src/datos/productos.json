@@ -2,14 +2,14 @@
     {
         "id": 1,
         "status": true,
-        "titulo": "PEPE",
+        "titulo": "TOKEN",
         "descripcion": "ERC-20",
         "categoria": "MEME",
-        "precio": 420,
+        "precio": 69,
         "imagen": [
-            "na"
+            "NA"
         ],
-        "codigo": "A2",
+        "codigo": "A0",
         "stock": 10
     }
 ]
