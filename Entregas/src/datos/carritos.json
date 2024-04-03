@@ -1,0 +1,33 @@
+[
+    {
+        "id": 0,
+        "productos": [
+            {
+                "pid": 0,
+                "cantidad": 12
+            }
+        ]
+    },
+    {
+        "id": 1,
+        "productos": [
+            {
+                "pid": 3,
+                "cantidad": 15
+            },
+            {
+                "pid": 0,
+                "cantidad": 4
+            }
+        ]
+    },
+    {
+        "id": 2,
+        "productos": [
+            {
+                "pid": 3,
+                "cantidad": 10
+            }
+        ]
+    }
+]
