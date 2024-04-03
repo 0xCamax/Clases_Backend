@@ -58,7 +58,4 @@ router.post("/:cid/producto/:pid", async (req, res) => {
             detalle: `${error.message}`
         })
     }
-
-    //agregar productos al carrito :cid
-    // {producto: producto.id, cantidad: numero}
 })

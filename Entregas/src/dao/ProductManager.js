@@ -7,25 +7,31 @@ export class ProductManager {
     constructor(path){
         this.path = path
         this.products = []
-        this.validProps = ["titulo", "descripcion", "categoria", "precio", "imagen", "codigo", "stock", "status"]
+        this.validProps = {titulo: "string", descripcion: "string", categoria: "string", precio: "number", imagen:"object", codigo:"string", stock:"number", status: "boolean"}
     }
 
     async add(producto){
-
-        let newProduct = {
-            id: ProductManager.PRODUCT_ID++,
-            status: true,
-            ...producto
+        await this.getProducts()
+        if(this.validar(producto, true)){
+            ProductManager.PRODUCT_ID = this.products[this.products.length -1] ? this.products[this.products.length -1].id : 0
+            let newProduct = {
+                id: ++ProductManager.PRODUCT_ID,
+                status: true,
+                ...producto
+            }
+            this.products.push(newProduct)
+            await this.update()
+            return newProduct
+        } else {
+            throw new Error("Input invalido")
         }
-        this.products.push(newProduct)
-        await this.update()
-        return newProduct
     }
 
     async update(pid, producto){
-            if (pid){
+        if (pid){
+            if (this.validar(producto)) {
                 let update = await this.getPid(pid)
-                if (update == "No existe") {
+                if (!update) {
                     return update
                 } else {
                     let updateProd = {
@@ -37,8 +43,9 @@ export class ProductManager {
                     this.products[index] = updateProd
                 }
             }
-            writeFile(this.path, JSON.stringify(this.products, null, 4), "utf-8")
-            return
+        }
+        writeFile(this.path, JSON.stringify(this.products, null, 4), "utf-8")
+        return 
     }
 
     async delete(pid){
@@ -51,7 +58,7 @@ export class ProductManager {
     async getPid(pid){
         this.products = await this.getProducts()
         let producto = this.products.filter(p => p.id == pid)[0]
-        return producto ? producto : "No existe"
+        return producto
     }
 
     async getProducts(){
@@ -63,6 +70,41 @@ export class ProductManager {
             return this.products
         }
     }
+
+    validar (input, strict) {
+        let valid = true
+        const invalidProp = Object.keys(input).filter(k => !this.validProps.hasOwnProperty(k))
+        const invalidType = Object.entries(input)
+            .filter(([k, v]) => this.validProps.hasOwnProperty(k) && typeof v !== this.validProps[k])
+            .map(([k]) => k)
+        if (input["codigo"]) {
+            if (this.products.some(p => p.codigo == input["codigo"])) {
+                console.log("Codigo repetido")
+                valid = false
+            }
+        }
+        if (input["imagen"]) {
+            let invalidIMG = input.imagen.some(img => typeof img !== "string")
+            invalidIMG ? invalidType.push("imagen") : null
+        }
+        if (invalidProp.length > 0) {
+            console.log(`Propiedad invalida: ${invalidProp.join(", ")}`)
+            valid = false
+        }
+        if (invalidType.length > 0){
+            console.log(`TypeError: ${invalidType}`)
+            valid = false
+        }
+        if (strict) {
+            delete this.validProps.status
+            if (Object.keys(input).length !== Object.keys(this.validProps).length){
+                console.log("Informacion incompleta")
+                valid = false
+            }
+        }
+        return valid
+    }
+
 }
 
 
