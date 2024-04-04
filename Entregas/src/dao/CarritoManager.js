@@ -38,23 +38,15 @@ export class CarritoManager {
     }
 
     async getCid(cid){
-        try {
-            await this.getCarritos()
-            let carrito = this.carritos.filter(c => c.id == cid)[0]
-            return carrito ? carrito : undefined
-        } catch (error) {
-            return          
-        }
+        await this.getCarritos()
+        let carrito = this.carritos.filter(c => c.id == cid)[0]
+        return carrito ? carrito : undefined
     }
 
     async getCarritos(){
-        try {
-            let json = await readFile(this.path, {encoding: "utf-8"})
-            this.carritos = JSON.parse(json)
-            return this.carritos
-        } catch (error) {
-            
-        }
+        let json = await readFile(this.path, {encoding: "utf-8"})
+        this.carritos = JSON.parse(json)
+        return this.carritos
     }
 
     async deletePid(cid, pid, cantidad){
