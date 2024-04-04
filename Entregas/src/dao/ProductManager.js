@@ -12,10 +12,11 @@ export class ProductManager {
 
     async add(producto){
         await this.getProducts()
-        if(this.validar(producto, true)){
-            ProductManager.PRODUCT_ID = this.products[this.products.length -1] ? this.products[this.products.length -1].id : 0
+        let validar = this.validar(producto, true)
+        if(validar.length == 0){
+            ProductManager.PRODUCT_ID = this.products[this.products.length -1] ? this.products[this.products.length -1].id +1 : 0
             let newProduct = {
-                id: ++ProductManager.PRODUCT_ID,
+                id: ProductManager.PRODUCT_ID++,
                 status: true,
                 ...producto
             }
@@ -23,13 +24,14 @@ export class ProductManager {
             await this.update()
             return newProduct
         } else {
-            throw new Error("Input invalido")
+            throw new Error(`${validar.join(' | ')}`)
         }
     }
 
     async update(pid, producto){
         if (pid){
-            if (this.validar(producto)) {
+            let validar = this.validar(producto)
+            if (validar.length == 0) {
                 let update = await this.getPid(pid)
                 if (!update) {
                     return update
@@ -44,6 +46,8 @@ export class ProductManager {
                     writeFile(this.path, JSON.stringify(this.products, null, 4), "utf-8")
                     return {updateProd, update}
                 }
+            } else {
+                throw new Error(`${validar.join(" | ")}`)
             }
         }
         writeFile(this.path, JSON.stringify(this.products, null, 4), "utf-8")
@@ -74,39 +78,37 @@ export class ProductManager {
     }
 
     validar (input, strict) {
-        let valid = true
+        let errores = []
         const invalidProp = Object.keys(input).filter(k => !this.validProps.hasOwnProperty(k))
         const invalidType = Object.entries(input)
             .filter(([k, v]) => this.validProps.hasOwnProperty(k) && typeof v !== this.validProps[k])
             .map(([k]) => k)
         if (input["codigo"]) {
             if (this.products.some(p => p.codigo == input["codigo"])) {
-                console.log("Codigo repetido")
-                valid = false
+                errores.push("codigo repetido")
             }
         }
         if (input["imagen"]) {
-            let invalidIMG = input.imagen.some(img => typeof img !== "string")
-            invalidIMG ? invalidType.push("imagen") : null
+            let invalidIMG = Array.isArray(input.imagen) ? input.imagen.some(img => typeof img !== "string") : true
+            invalidIMG ? new Set(invalidType, "imagen") : null
         }
         if (invalidProp.length > 0) {
-            console.log(`Propiedad invalida: ${invalidProp.join(", ")}`)
-            valid = false
+            errores.push(`Propiedad invalida: ${invalidProp.join(", ")}`)
+            
         }
         if (invalidType.length > 0){
-            console.log(`TypeError: ${invalidType}`)
-            valid = false
+            errores.push(`TypeError: ${invalidType.join(", ")}`)
         }
         if (strict) {
             delete this.validProps.status
-            if (Object.keys(input).length !== Object.keys(this.validProps).length){
-                console.log("Informacion incompleta")
-                valid = false
+            if(Object.keys(input).length < Object.keys(this.validProps).length) {
+                let missing = Object.keys(this.validProps).filter(k => !Object.keys(input).includes(k))
+                errores.push(`Informacion incompleta: ${missing.join(", ")}`)
             }
         }
-        return valid
+            return errores
+        }
     }
 
-}
 
 

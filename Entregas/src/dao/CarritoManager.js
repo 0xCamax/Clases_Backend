@@ -7,11 +7,12 @@ export class CarritoManager {
     constructor(path){
         this.path = path
         this.carritos = []
-        this.validProps = ["id","cantidad"]
     }
 
     async add(cid, pid, cantidad){
         if (!cid){
+            await this.getCarritos()
+            CarritoManager.CARRITO_ID = this.carritos[this.carritos.length -1] ? this.carritos[this.carritos.length -1].id +1 : 0
             let newCarrito = {
                 id: CarritoManager.CARRITO_ID++,
                 productos: []
@@ -19,7 +20,7 @@ export class CarritoManager {
             this.carritos.push(newCarrito)
             
             writeFile(this.path, JSON.stringify(this.carritos, null, 4), "utf-8")
-            return `Se creo un nuevo carrito CID: ${newCarrito.id}`
+            return newCarrito
         } else {
             let carrito = await this.getCid(cid)
             let index = carrito.productos.findIndex(p => p.pid == pid)
@@ -32,19 +33,37 @@ export class CarritoManager {
                 })
             }
             writeFile(this.path, JSON.stringify(this.carritos, null, 4), "utf-8")
-            return `Se agregaron ${cantidad} pid: ${pid} al carrito CID: ${cid}`
+            return carrito
         }
-
     }
 
     async getCid(cid){
         try {
-            let json = await readFile(this.path, {encoding: 'utf-8'})
-            this.carritos = JSON.parse(json)
+            await this.getCarritos()
             let carrito = this.carritos.filter(c => c.id == cid)[0]
             return carrito ? carrito : undefined
         } catch (error) {
             return          
         }
+    }
+
+    async getCarritos(){
+        try {
+            let json = await readFile(this.path, {encoding: "utf-8"})
+            this.carritos = JSON.parse(json)
+            return this.carritos
+        } catch (error) {
+            
+        }
+    }
+
+    async deletePid(cid, pid, cantidad){
+        let carrito = await this.getCid(cid)
+        let index = carrito.productos.findIndex(p => p.pid == pid)
+        carrito.productos[index].cantidad -= cantidad
+        carrito.productos[index].cantidad <= 0 ? carrito.productos.splice(index, 1) : null
+            
+        writeFile(this.path, JSON.stringify(this.carritos, null, 4), "utf-8")
+        return carrito
     }
 }
