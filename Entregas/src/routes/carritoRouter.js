@@ -1,7 +1,11 @@
 import { Router } from "express";
-import { carritoManager, productManager } from "../main.js";
+import { productManager } from "./productosRouter.js";
+import { CarritoManager } from "../dao/CarritoManager.js"
+import path from "path"
 
 export const router = Router()
+
+export const carritoManager = new CarritoManager(path.resolve("src","datos", "carritos.json"))
 
 router.post("/", async (req, res) => {
     try {
@@ -45,7 +49,7 @@ router.post("/:cid/producto/:pid", async (req, res) => {
     try {
         let { cid, pid } = req.params
         let { cantidad } = req.body
-
+        
         if (!cantidad || isNaN(Number(cantidad)) || Object.keys(req.body).length !== 1) {
             throw new Error ("Input invalido")
         } else {

@@ -1,9 +1,10 @@
 import { Router } from "express";
-import { productManager } from "../main.js";
-
-
+import { ProductManager } from "../dao/ProductManager.js"
+import path from "path"
 
 export const router = Router()
+
+export const productManager = new ProductManager(path.resolve("src","datos", "productos.json"))
 
 
 router.get("/", async (req, res) => {
