@@ -1,16 +1,25 @@
 [
     {
+        "id": 0,
+        "status": true,
+        "titulo": "TOKEN",
+        "descripcion": "ERC-20",
+        "categoria": "MEME",
+        "imagen": [],
+        "precio": 420,
+        "codigo": "01",
+        "stock": 42069
+    },
+    {
         "id": 1,
         "status": true,
         "titulo": "TOKEN",
         "descripcion": "ERC-20",
         "categoria": "MEME",
+        "imagen": [],
         "precio": 420,
-        "imagen": [
-            "NA"
-        ],
-        "codigo": "A1",
-        "stock": 10
+        "codigo": "02",
+        "stock": 42069
     },
     {
         "id": 2,
@@ -18,12 +27,10 @@
         "titulo": "TOKEN",
         "descripcion": "ERC-20",
         "categoria": "MEME",
-        "precio": 42069,
-        "imagen": [
-            "NA"
-        ],
-        "codigo": "A2",
-        "stock": 4206942069
+        "imagen": [],
+        "precio": 420,
+        "codigo": "03",
+        "stock": 42069
     },
     {
         "id": 3,
@@ -31,12 +38,10 @@
         "titulo": "TOKEN",
         "descripcion": "ERC-20",
         "categoria": "MEME",
-        "precio": 42069,
-        "imagen": [
-            "NA"
-        ],
-        "codigo": "A3",
-        "stock": 4206942069
+        "imagen": [],
+        "precio": 420,
+        "codigo": "04",
+        "stock": 42069
     },
     {
         "id": 4,
@@ -44,12 +49,10 @@
         "titulo": "TOKEN",
         "descripcion": "ERC-20",
         "categoria": "MEME",
-        "precio": 42069,
-        "imagen": [
-            "NA"
-        ],
-        "codigo": "A4",
-        "stock": 4206942069
+        "imagen": [],
+        "precio": 420,
+        "codigo": "05",
+        "stock": 42069
     },
     {
         "id": 5,
@@ -57,12 +60,10 @@
         "titulo": "TOKEN",
         "descripcion": "ERC-20",
         "categoria": "MEME",
-        "precio": 42069,
-        "imagen": [
-            "NA"
-        ],
-        "codigo": "A5",
-        "stock": 4206942069
+        "imagen": [],
+        "precio": 420,
+        "codigo": "06",
+        "stock": 42069
     },
     {
         "id": 6,
@@ -70,12 +71,10 @@
         "titulo": "TOKEN",
         "descripcion": "ERC-20",
         "categoria": "MEME",
-        "precio": 2,
-        "imagen": [
-            "ASdasd"
-        ],
-        "codigo": "A6",
-        "stock": 3
+        "imagen": [],
+        "precio": 420,
+        "codigo": "07",
+        "stock": 42069
     },
     {
         "id": 7,
@@ -83,213 +82,97 @@
         "titulo": "TOKEN",
         "descripcion": "ERC-20",
         "categoria": "MEME",
-        "precio": 2,
-        "imagen": [
-            "ASdasd"
-        ],
-        "codigo": "A7",
-        "stock": 3
+        "imagen": [],
+        "precio": 420,
+        "codigo": "08",
+        "stock": 42069
     },
     {
         "id": 8,
         "status": true,
-        "titulo": "NFT",
-        "descripcion": "ERC-721",
-        "categoria": "ART",
-        "precio": 1,
-        "imagen": [
-            "na"
-        ],
-        "codigo": "A8",
-        "stock": 10000
+        "titulo": "TOKEN",
+        "descripcion": "ERC-20",
+        "categoria": "MEME",
+        "imagen": [],
+        "precio": 420,
+        "codigo": "09",
+        "stock": 42069
     },
     {
         "id": 9,
         "status": true,
-        "titulo": "NFT",
-        "descripcion": "ERC-721",
-        "categoria": "ART",
-        "precio": 1,
-        "imagen": [
-            "na"
-        ],
-        "codigo": "A9",
-        "stock": 10000
+        "titulo": "TOKEN",
+        "descripcion": "ERC-20",
+        "categoria": "MEME",
+        "imagen": [],
+        "precio": 420,
+        "codigo": "0A",
+        "stock": 42069
     },
     {
         "id": 10,
         "status": true,
-        "titulo": "NFT",
-        "descripcion": "ERC-721",
-        "categoria": "ART",
+        "titulo": "TOKEN",
+        "descripcion": "ERC-20",
+        "categoria": "MEME",
         "imagen": [],
-        "precio": 1,
-        "codigo": "AA",
-        "stock": 10000
+        "precio": 420,
+        "codigo": "0B",
+        "stock": 42069
     },
     {
         "id": 11,
         "status": true,
         "titulo": "TOKEN",
         "descripcion": "ERC-20",
-        "categoria": "STORAGE",
+        "categoria": "MEME",
         "imagen": [],
-        "precio": 69,
-        "codigo": "AB",
-        "stock": 999
+        "precio": 420,
+        "codigo": "0E",
+        "stock": 42069
     },
     {
         "id": 12,
         "status": true,
         "titulo": "TOKEN",
         "descripcion": "ERC-20",
-        "categoria": "STORAGE",
+        "categoria": "MEME",
         "imagen": [],
-        "precio": 69,
-        "codigo": "AC",
-        "stock": 999
+        "precio": 420,
+        "codigo": "10",
+        "stock": 42069
     },
     {
         "id": 13,
         "status": true,
         "titulo": "TOKEN",
         "descripcion": "ERC-20",
-        "categoria": "FINANCE",
+        "categoria": "MEME",
         "imagen": [],
-        "precio": 69000,
-        "codigo": "AD",
-        "stock": 210000000
+        "precio": 420,
+        "codigo": "11",
+        "stock": 42069
     },
     {
         "id": 14,
         "status": true,
         "titulo": "TOKEN",
         "descripcion": "ERC-20",
-        "categoria": "FINANCE",
+        "categoria": "MEME",
         "imagen": [],
-        "precio": 69000,
-        "codigo": "AF",
-        "stock": 210000000
+        "precio": 420,
+        "codigo": "12",
+        "stock": 42069
     },
     {
         "id": 15,
         "status": true,
         "titulo": "TOKEN",
         "descripcion": "ERC-20",
-        "categoria": "FINANCE",
-        "imagen": [],
-        "precio": 69000,
-        "codigo": "B0",
-        "stock": 210000000
-    },
-    {
-        "id": 16,
-        "status": true,
-        "titulo": "TOKEN",
-        "descripcion": "ERC-20",
-        "categoria": "AI",
-        "imagen": [],
-        "precio": 69,
-        "codigo": "B1",
-        "stock": 1000000
-    },
-    {
-        "id": 17,
-        "status": true,
-        "titulo": "TOKEN",
-        "descripcion": "ERC-20",
-        "categoria": "AI",
-        "imagen": [],
-        "precio": 69,
-        "codigo": "B2",
-        "stock": 1000000
-    },
-    {
-        "id": 18,
-        "status": true,
-        "titulo": "TOKEN",
-        "descripcion": "ERC-20",
         "categoria": "MEME",
         "imagen": [],
         "precio": 420,
-        "codigo": "B3",
-        "stock": 42069
-    },
-    {
-        "id": 19,
-        "status": true,
-        "titulo": "TOKEN",
-        "descripcion": "ERC-20",
-        "categoria": "CEX",
-        "imagen": [],
-        "precio": 600,
-        "codigo": "B4",
-        "stock": 100000000000
-    },
-    {
-        "id": 20,
-        "status": true,
-        "titulo": "TOKEN",
-        "descripcion": "ERC-20",
-        "categoria": "CEX",
-        "imagen": [],
-        "precio": 600,
-        "codigo": "B5",
-        "stock": 100000000000
-    },
-    {
-        "id": 21,
-        "status": true,
-        "titulo": "TOKEN",
-        "descripcion": "ERC-20",
-        "categoria": "GAME",
-        "imagen": [],
-        "precio": 200000,
-        "codigo": "B6",
-        "stock": 100000000000
-    },
-    {
-        "id": 22,
-        "status": true,
-        "titulo": "TOKEN",
-        "descripcion": "ERC-20",
-        "categoria": "GAME",
-        "imagen": [],
-        "precio": 200000000,
-        "codigo": "B8",
-        "stock": 40000000000000
-    },
-    {
-        "id": 23,
-        "status": true,
-        "titulo": "TOKEN",
-        "descripcion": "ERC-20",
-        "categoria": "GAME",
-        "imagen": [],
-        "precio": 80000000000,
-        "codigo": "B9",
-        "stock": 10000000000000
-    },
-    {
-        "id": 24,
-        "status": true,
-        "titulo": "TOKEN",
-        "descripcion": "ERC-20",
-        "categoria": "MEME",
-        "imagen": [],
-        "precio": 420,
-        "codigo": "BA",
-        "stock": 42069
-    },
-    {
-        "id": 25,
-        "status": true,
-        "titulo": "TOKEN",
-        "descripcion": "ERC-20",
-        "categoria": "MEME",
-        "imagen": [],
-        "precio": 420,
-        "codigo": "BB",
+        "codigo": "13",
         "stock": 42069
     }
 ]

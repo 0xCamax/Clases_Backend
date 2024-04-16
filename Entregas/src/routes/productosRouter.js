@@ -1,10 +1,14 @@
 import { Router } from "express";
 import { ProductManager } from "../dao/ProductManager.js"
 import path from "path"
+import { io } from "../main.js";
+
 
 export const router = Router()
 
 export const productManager = new ProductManager(path.resolve("src","datos", "productos.json"))
+
+
 
 
 router.get("/", async (req, res) => {
@@ -57,6 +61,7 @@ router.get("/:pid", async (req, res) => {
 router.post("/", async (req, res) => {
     try {
         let newProduct = await productManager.add(req.body)
+        io.emit("agregar", newProduct)
         res.setHeader("Content-Type", "text/plain")
         return res.status(200).json({
             respuesta: "Se agrego el producto exitosamente",
@@ -98,8 +103,8 @@ router.put("/:pid", async (req, res) => {
 router.delete("/:pid", async (req, res)=> {
     try {
         let { pid } = req.params
-
         let eliminar = await productManager.delete(pid)
+
         
         if (!eliminar){
             res.setHeader("Content-Type", "aplication/json")
@@ -108,6 +113,7 @@ router.delete("/:pid", async (req, res)=> {
                 detalle: `No existe id: ${pid}`
             })
         } else {
+            io.emit("eliminar", eliminar)
             res.setHeader("Content-Type", "aplication/json")
             return res.status(200).json({
                 respuesta: `Producto eliminado`,
