@@ -14,11 +14,7 @@ socket.on("agregar", (data) => {
     producto.innerHTML = htmllist
     producto.id = data.id
     let lista = document.getElementById("lista")
-    try {
-        lista.appendChild(producto)
-    } catch (error) {
-        lista.append(producto)
-    }
+    lista.append(producto)
 })
 
 socket.on("eliminar", data => {

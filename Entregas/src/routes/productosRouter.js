@@ -9,19 +9,17 @@ export const router = Router()
 export const productManager = new ProductManager(path.resolve("src","datos", "productos.json"))
 
 
-
-
 router.get("/", async (req, res) => {
     try {
         let {limit} = req.query
         let showProducts = await productManager.getProducts()
         if (limit) {
             let show = showProducts.slice(0, limit)
-            res.setHeader("Content-Type", "text/plain")
+            res.setHeader("Content-Type", "aplication/json")
             return res.json(show)
     
         } else {
-            res.setHeader("Content-Type", "text/plain")
+            res.setHeader("Content-Type", "aplication/json")
             return res.status(200).json(showProducts)
         }
 
@@ -45,12 +43,12 @@ router.get("/:pid", async (req, res) => {
                 detalle: `No existe producto con id: ${pid}`
             })
         } else {
-            res.setHeader("Content-Type", "text/plain")
+            res.setHeader("Content-Type", "aplication/json")
             return res.status(200).json(producto)
         }
         } catch (error) {
             console.log(error)
-            res.setHeader("Content-Type", "text/plain")
+            res.setHeader("Content-Type", "aplication/json")
             return res.status(500).json({
                 error: "Error al buscar producto"
             })
@@ -62,13 +60,13 @@ router.post("/", async (req, res) => {
     try {
         let newProduct = await productManager.add(req.body)
         io.emit("agregar", newProduct)
-        res.setHeader("Content-Type", "text/plain")
+        res.setHeader("Content-Type", "aplication/json")
         return res.status(200).json({
             respuesta: "Se agrego el producto exitosamente",
             detalle: newProduct
         })
     } catch (error) {
-        res.setHeader("Content-Type", "text/plain")
+        res.setHeader("Content-Type", "aplication/json")
         return res.status(500).json({
             error: "Error al agregar producto",
             detalle: error.message,
@@ -83,7 +81,7 @@ router.put("/:pid", async (req, res) => {
 
         let update = await productManager.update(pid, req.body)
 
-        res.setHeader("Content-Type", "text/plain")
+        res.setHeader("Content-Type", "aplication/json")
         return res.status(200).json({
             respuesta: "Producto modificado",
             antes: update.update,
