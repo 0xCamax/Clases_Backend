@@ -7,7 +7,6 @@ export class ProductManager {
     constructor(path){
         this.path = path
         this.products = []
-        this.validProps = {titulo: "string", descripcion: "string", categoria: "string", precio: "number", imagen:"object", codigo:"string", stock:"number", status: "boolean"}
     }
 
     async add(producto){
@@ -78,11 +77,27 @@ export class ProductManager {
     }
 
     validar (input, strict) {
+        let validProps = {titulo: "string", descripcion: "string", categoria: "string", precio: "number", imagen:"object", codigo:"string", stock:"number", status: "boolean"}
         let errores = []
-        const invalidProp = Object.keys(input).filter(k => !this.validProps.hasOwnProperty(k))
+        if (strict) {
+            delete validProps.status
+            if(Object.keys(input).length < Object.keys(validProps).length || Object.values(input).some(v => !v)) {
+                let missing = Object.keys(validProps).filter(k => !Object.keys(input).includes(k))
+                let fillinfo = Object.entries(input).filter(([k,v])=> !v)
+                fillinfo ? errores.push(`Informacion incompleta: ${fillinfo.join(" ")}`) : errores.push(`Informacion incompleta: ${missing.join(" ")}`)
+            }
+        }
+        const invalidProp = Object.keys(input).filter(k => !validProps.hasOwnProperty(k))
+        if (invalidProp.length > 0) {
+            errores.push(`Propiedad invalida: ${invalidProp.join(", ")}`)
+        } else {
+            input.precio = Number(input.precio)
+            input.stock = Number(input.stock)
+        }
         const invalidType = Object.entries(input)
-            .filter(([k, v]) => this.validProps.hasOwnProperty(k) && typeof v !== this.validProps[k])
+            .filter(([k, v]) => validProps.hasOwnProperty(k) && typeof v !== validProps[k])
             .map(([k]) => k)
+            
         if (input["codigo"]) {
             if (this.products.some(p => p.codigo == input["codigo"])) {
                 errores.push("codigo repetido")
@@ -92,19 +107,8 @@ export class ProductManager {
             let invalidIMG = Array.isArray(input.imagen) ? input.imagen.some(img => typeof img !== "string") : true
             invalidIMG ? new Set(invalidType, "imagen") : null
         }
-        if (invalidProp.length > 0) {
-            errores.push(`Propiedad invalida: ${invalidProp.join(", ")}`)
-            
-        }
         if (invalidType.length > 0){
             errores.push(`TypeError: ${invalidType.join(", ")}`)
-        }
-        if (strict) {
-            delete this.validProps.status
-            if(Object.keys(input).length < Object.keys(this.validProps).length) {
-                let missing = Object.keys(this.validProps).filter(k => !Object.keys(input).includes(k))
-                errores.push(`Informacion incompleta: ${missing.join(", ")}`)
-            }
         }
             return errores
         }

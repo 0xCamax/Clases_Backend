@@ -1,0 +1,48 @@
+    <div>
+        <h2>Agregar producto</h2>
+        <div style="display:flex; flex-direction:column; width:200px; overflow:auto">
+            <label for="titulo">Titulo</label>
+            <input id="titulo" type="text" name="titulo"><br>
+            <label for="descripcion">Descripcion</label>
+            <input id="descripcion" type="text" name="descripcion"><br>
+            <label for="categoria">Categoria</label>
+            <input id="categoria" type="text" name="categoria"><br>
+            <label for="precio">Precio</label>
+            <input id="precio" type="number" name="precio"><br>
+            <label for="imagen">Imagen</label>
+            <input id="imagen" type="file" name="imagen" accept="image/*" multiple>
+            <label for="codigo">Codigo</label>
+            <input id="codigo" type="text" name="codigo"><br>
+            <label for="stock">Stock</label>
+            <input id="stock" type="number" name="stock"><br>
+            <button type="button" id="agregar">Agregar</button>
+        </div>
+    </div>
+    <div>
+        <h2>Eliminar producto</h2>
+        <form style="display:flex; flex-direction:column; width:200px; overflow:auto" action="" method="post">
+            <label for="id">ID</label>
+            <input id="eliminar" type="number" name="ID"><br>
+            <button id="eliminarProducto" type="button">Eliminar</button>
+        </form>
+    </div>
+    <h2>Real time productos</h2>
+    {{#if productosLength}}
+        <ul id="lista">
+        {{#each productos}}
+            <li id={{this.id}}>
+                <p>id: {{this.id}}</p>
+                <p>Titulo: {{this.titulo}}</p>
+                <p>descripcion: {{this.descripcion}}</p>
+                <p>Categoria: {{this.categoria}}</p>
+                <p>Precio: {{this.precio}}</p>
+                <p>Codigo: {{this.codigo}}</p>
+                <p>Stock: {{this.stock}}</p>
+            </li>
+        {{/each}}
+        </ul>
+    {{else}}
+            <p>No hay productos disponibles</p>
+    {{/if}}
+<script src="/socket.io/socket.io.js"></script>
+<script type="module" src="/js/realTime.js"></script>

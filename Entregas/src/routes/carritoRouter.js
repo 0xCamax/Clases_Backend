@@ -37,10 +37,10 @@ router.get("/:cid", async (req, res) => {
             return res.status(200).json(carrito)
         }
     } catch (error) {
+        console.log(error)
         res.setHeader("Content-Type", "aplication/json")
         return res.status(500).json({
-            error: "Error al buscar carrito",
-            detalle: error.message
+            error: "Error al buscar carrito"
         })
     }
 })
@@ -75,10 +75,10 @@ router.post("/:cid/producto/:pid", async (req, res) => {
             }
         }
     } catch (error) {
+        console.log(error)
         res.setHeader("Content-Type", "aplication/json")
         return res.status(500).json({
-            error: "Error al agregar producto al carrito",
-            detalle: error.message
+            error: "Error al agregar producto al carrito"
         })
     }
 })
@@ -112,10 +112,10 @@ router.delete("/:cid/producto/:pid", async (req, res) => {
             }
         }
     } catch (error) {
+        console.log(error)
         res.setHeader("Content-Type", "aplication/json")
         return res.status(500).json({
-            error: "Error al eliminar producto del carrito",
-            detalle: error.message
+            error: "Error al eliminar producto del carrito"
         })
     }
 })

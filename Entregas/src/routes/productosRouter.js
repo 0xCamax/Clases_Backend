@@ -13,17 +13,19 @@ router.get("/", async (req, res) => {
         let showProducts = await productManager.getProducts()
         if (limit) {
             let show = showProducts.slice(0, limit)
-            res.setHeader("Content-Type", "aplication/json")
+            res.setHeader("Content-Type", "text/plain")
             return res.json(show)
+    
         } else {
-            res.setHeader("Content-Type", "aplication/json")
-            return res.status(200).send(showProducts)
+            res.setHeader("Content-Type", "text/plain")
+            return res.status(200).json(showProducts)
         }
+
     } catch (error) {
+        console.log(error)
         res.setHeader("Content-Type", "aplication/json")
         return res.status(500).json({
-            error: "Error al mostrar productos",
-            detalle: error.message
+            error: "Error al mostrar productos"
         })
     }
 
@@ -39,14 +41,14 @@ router.get("/:pid", async (req, res) => {
                 detalle: `No existe producto con id: ${pid}`
             })
         } else {
-            res.setHeader("Content-Type", "aplication/json")
+            res.setHeader("Content-Type", "text/plain")
             return res.status(200).json(producto)
         }
         } catch (error) {
-            res.setHeader("Content-Type", "aplication/json")
+            console.log(error)
+            res.setHeader("Content-Type", "text/plain")
             return res.status(500).json({
-                error: "Error al buscar producto",
-                detalle: error.message
+                error: "Error al buscar producto"
             })
         }
     }
@@ -55,16 +57,17 @@ router.get("/:pid", async (req, res) => {
 router.post("/", async (req, res) => {
     try {
         let newProduct = await productManager.add(req.body)
-        res.setHeader("Content-Type", "aplication/json")
+        res.setHeader("Content-Type", "text/plain")
         return res.status(200).json({
             respuesta: "Se agrego el producto exitosamente",
             detalle: newProduct
         })
     } catch (error) {
-        res.setHeader("Content-Type", "aplication/json")
+        res.setHeader("Content-Type", "text/plain")
         return res.status(500).json({
             error: "Error al agregar producto",
-            detalle: error.message
+            detalle: error.message,
+            body: req.body
         })
     }
 })
@@ -75,7 +78,7 @@ router.put("/:pid", async (req, res) => {
 
         let update = await productManager.update(pid, req.body)
 
-        res.setHeader("Content-Type", "aplication/json")
+        res.setHeader("Content-Type", "text/plain")
         return res.status(200).json({
             respuesta: "Producto modificado",
             antes: update.update,
