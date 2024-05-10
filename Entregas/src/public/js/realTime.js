@@ -26,3 +26,5 @@ socket.on("eliminar", data => {
     document.getElementById(data._id) ? document.getElementById(data._id).remove() : console.log("No existe")
 })
 
+
+

@@ -1,11 +1,11 @@
 import { Router } from "express";
 import { productManager } from "./productosRouter.js";
 import { CarritoManager } from "../dao/CarritoManager.js"
-import path from "path"
+
 
 export const router = Router()
 
-export const carritoManager = new CarritoManager(path.resolve("src","datos", "carritos.json"))
+export const carritoManager = new CarritoManager()
 
 router.post("/", async (req, res) => {
     try {
@@ -61,7 +61,7 @@ router.post("/:cid/producto/:pid", async (req, res) => {
                     detalle: `No existe pid: ${pid}`
                 })
             } else {
-                let carrito = await carritoManager.add(cid, producto.id, cantidad)
+                let carrito = await carritoManager.add(cid, producto._id, cantidad)
                 
                 res.setHeader("Content-Type", "aplication/json")
                 return res.status(200).json({
@@ -83,7 +83,7 @@ router.post("/:cid/producto/:pid", async (req, res) => {
     }
 })
 
-router.delete("/:cid/producto/:pid", async (req, res) => {
+router.put("/:cid/producto/:pid", async (req, res) => {
     try {
         let { cid, pid } = req.params
         let { cantidad } = req.body
@@ -116,6 +116,24 @@ router.delete("/:cid/producto/:pid", async (req, res) => {
         res.setHeader("Content-Type", "aplication/json")
         return res.status(500).json({
             error: "Error al eliminar producto del carrito"
+        })
+    }
+})
+
+router.delete('/:cid', async (req, res) => {
+    try{
+        let { cid } = req.params
+        let deleteAll = await carritoManager.deleteAll(cid)
+        res.setHeader("Content-Type", "aplication/json")
+        return res.status(200).json({
+            respuesta: 'Carrito vacio',
+            detalle: deleteAll
+        })
+    } catch (err){
+        console.log(err)
+        res.setHeader("Content-Type", "aplication/json")
+        return res.status(500).json({
+            error: "Error al eliminar productos del carrito"
         })
     }
 })

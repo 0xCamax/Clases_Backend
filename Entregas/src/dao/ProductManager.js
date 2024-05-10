@@ -15,26 +15,16 @@ export class ProductManager {
     }
 
     async update(pid, producto){
-        if (pid){
-            let update = await this.getPid(pid)
-            if (!update) {
-                return update
-            } else {
-                let updateProd = await Product.updateOne({'_id':pid, producto})
-                return {updateProd, update}
-            }
-        }
-        return 
+        await Product.updateOne({'_id':pid}, producto)
+        return await this.getPid(pid)
     }
 
     async delete(pid){
-        let eliminar = Product.findOneAndDelete({'_id': pid})
-        return eliminar
+        return await Product.findOneAndDelete({'_id': pid})
     }
 
     async getPid(pid){
-        let producto = Product.findOne({'_id': pid})
-        return producto
+        return await Product.findOne({'_id': pid})
     }
 
     async getProducts(){

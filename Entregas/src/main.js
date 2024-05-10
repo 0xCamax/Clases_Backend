@@ -31,7 +31,7 @@ main.engine("hbs", hbs.engine)
 main.set("views", path.resolve("src", "views"))
 main.set("view engine", "hbs")
 main.use(express.static(path.resolve("src", "public")))
-main.use("/api/products", productosRouter)
+main.use("/api/producto", productosRouter)
 main.use("/api/carrito", carritoRouter)
 main.use("/", viewsRouter)
 

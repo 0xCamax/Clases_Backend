@@ -11,4 +11,4 @@ const productsSchema = new mongoose.Schema({
     status: {type: Boolean, default: true}
 })
 
-export const Product = mongoose.model('Product', productsSchema)
+export const Product = mongoose.model('Product', productsSchema, "Productos")
