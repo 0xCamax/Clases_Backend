@@ -1,117 +1,87 @@
-import { readFile, writeFile } from "fs/promises"
+import { Product } from "../models/productsModel.js"
 
 export class ProductManager {
 
-    static PRODUCT_ID = 0
-
-    constructor(path){
-        this.path = path
+    constructor(){
         this.products = []
     }
 
     async add(producto){
-        await this.getProducts()
-        let validar = this.validar(producto, true)
-        if(validar.length == 0){
-            ProductManager.PRODUCT_ID = this.products[this.products.length -1] ? this.products[this.products.length -1].id +1 : 0
-            let newProduct = {
-                id: ProductManager.PRODUCT_ID++,
-                status: true,
-                ...producto
-            }
-            this.products.push(newProduct)
-            await this.update()
-            return newProduct
-        } else {
-            throw new Error(`${validar.join(' | ')}`)
-        }
+        this.products.push(producto)
+        let newProduct = new Product({
+            ...producto
+        })
+        return await newProduct.save()
     }
 
     async update(pid, producto){
         if (pid){
-            let validar = this.validar(producto)
-            if (validar.length == 0) {
-                let update = await this.getPid(pid)
-                if (!update) {
-                    return update
-                } else {
-                    let updateProd = {
-                        ...update,
-                        ...producto,
-                        id: update.id
-                    }
-                    let index = this.products.findIndex(p => p.id == pid)
-                    this.products[index] = updateProd
-                    writeFile(this.path, JSON.stringify(this.products, null, 4), "utf-8")
-                    return {updateProd, update}
-                }
+            let update = await this.getPid(pid)
+            if (!update) {
+                return update
             } else {
-                throw new Error(`${validar.join(" | ")}`)
+                let updateProd = await Product.updateOne({'_id':pid, producto})
+                return {updateProd, update}
             }
         }
-        writeFile(this.path, JSON.stringify(this.products, null, 4), "utf-8")
         return 
     }
 
     async delete(pid){
-        let eliminar = await this.getPid(pid)
-        this.products = this.products.filter(p => p.id != pid)
-        await this.update()
+        let eliminar = Product.findOneAndDelete({'_id': pid})
         return eliminar
     }
 
     async getPid(pid){
-        this.products = await this.getProducts()
-        let producto = this.products.filter(p => p.id == pid)[0]
+        let producto = Product.findOne({'_id': pid})
         return producto
     }
 
     async getProducts(){
         try {
-            let json = await readFile(this.path, {encoding: 'utf-8'})
-            this.products = JSON.parse(json)
+            this.products = await Product.find()
             return this.products
         } catch (error) {
             return this.products
         }
     }
 
-    validar (input, strict) {
-        let validProps = {titulo: "string", descripcion: "string", categoria: "string", precio: "number", imagen:"object", codigo:"string", stock:"number", status: "boolean"}
-        let errores = []
-        if (strict) {
-            delete validProps.status
-            if(Object.keys(input).length < Object.keys(validProps).length || Object.values(input).some(v => !v)) {
-                let missing = Object.keys(validProps).filter(k => !Object.keys(input).includes(k))
-                let fillinfo = Object.entries(input).filter(([k,v])=> !v)
-                fillinfo ? errores.push(`Informacion incompleta: ${fillinfo.join(" ")}`) : errores.push(`Informacion incompleta: ${missing.join(" ")}`)
-            }
-        }
-        const invalidProp = Object.keys(input).filter(k => !validProps.hasOwnProperty(k))
-        if (invalidProp.length > 0) {
-            errores.push(`Propiedad invalida: ${invalidProp.join(", ")}`)
-        } else {
-            input.precio = Number(input.precio)
-            input.stock = Number(input.stock)
-        }
-        const invalidType = Object.entries(input)
-            .filter(([k, v]) => validProps.hasOwnProperty(k) && typeof v !== validProps[k])
-            .map(([k]) => k)
+    // validar (input, strict) {
+    //     let validProps = {titulo: "string", descripcion: "string", categoria: "string", precio: "number", imagen:"object", codigo:"string", stock:"number", status: "boolean"}
+    //     let errores = []
+    //     if (strict) {
+    //         delete validProps.status
+    //         if(Object.keys(input).length < Object.keys(validProps).length || Object.values(input).some(v => !v)) {
+    //             let missing = Object.keys(validProps).filter(k => !Object.keys(input).includes(k))
+    //             let fillinfo = Object.entries(input).filter(([k,v])=> !v)
+    //             fillinfo ? errores.push(`Informacion incompleta: ${fillinfo.join(" ")}`) : errores.push(`Informacion incompleta: ${missing.join(" ")}`)
+    //         }
+    //     }
+    //     const invalidProp = Object.keys(input).filter(k => !validProps.hasOwnProperty(k))
+    //     if (invalidProp.length > 0) {
+    //         errores.push(`Propiedad invalida: ${invalidProp.join(", ")}`)
+    //     } else {
+    //         input.precio = Number(input.precio)
+    //         input.stock = Number(input.stock)
+    //     }
+    //     const invalidType = Object.entries(input)
+    //         .filter(([k, v]) => validProps.hasOwnProperty(k) && typeof v !== validProps[k])
+    //         .map(([k]) => k)
             
-        if (input["codigo"]) {
-            if (this.products.some(p => p.codigo == input["codigo"])) {
-                errores.push("codigo repetido")
-            }
-        }
-        if (input["imagen"]) {
-            let invalidIMG = Array.isArray(input.imagen) ? input.imagen.some(img => typeof img !== "string") : true
-            invalidIMG ? new Set(invalidType, "imagen") : null
-        }
-        if (invalidType.length > 0){
-            errores.push(`TypeError: ${invalidType.join(", ")}`)
-        }
-            return errores
-        }
+    //     if (input["codigo"]) {
+    //         if (this.products.some(p => p.codigo == input["codigo"])) {
+    //             errores.push("codigo repetido")
+    //         }
+    //     }
+    //     if (input["imagen"]) {
+    //         let invalidIMG = Array.isArray(input.imagen) ? input.imagen.some(img => typeof img !== "string") : true
+    //         invalidIMG ? new Set(invalidType, "imagen") : null
+    //     }
+    //     if (invalidType.length > 0){
+    //         errores.push(`TypeError: ${invalidType.join(", ")}`)
+    //     }
+    //         return errores
+    //     }
     }
 
 
