@@ -22,9 +22,6 @@ const hbs = handlebars.create({
         allowProtoMethodsByDefault: true
     }
 })
-
-mongoose.connect('mongodb+srv://CoderHouse:coder.123321@cluster0.uz3kvfd.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0')
-
 main.use(express.json())
 main.use(express.urlencoded({extended:true}))
 main.engine("hbs", hbs.engine)
@@ -41,4 +38,9 @@ io.on("connection", socket => {
     console.log("cliente conectado")
 })
 
+const enviroment = async () => {
+    await mongoose.connect('mongodb+srv://CoderHouse:coder.123321@cluster0.uz3kvfd.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0')
+}
+
+enviroment()
 

@@ -20,7 +20,7 @@ router.post("/", async (req, res) => {
         res.setHeader("Content-Type", "aplication/json")
         return res.status(500).json({
             error: "Error al crear carrito",
-            detalle: `${error.message}`
+            detalle: error.message
         })
     }
 })

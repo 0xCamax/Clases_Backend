@@ -10,37 +10,21 @@ export const productManager = new ProductManager()
 
 router.get("/", async (req, res) => {
     try {
-        let {limit, page, sort, query} = req.query
-        limit ? limit : limit = 5
-        page ? page : page = 1
-        let url = `http://localhost:8080/api/producto?limit=${limit}`
-        let showProducts = await productManager.getProducts()
-        if (query) {
-            showProducts = showProducts.filter(q => q.categoria === query)
-            url = url + `&query=${query}`
-        }
-        let show = showProducts.slice((page-1)*limit, limit*page)
-        if (sort === 'desc') {
-            show.sort((a,b) => a.precio - b.precio)
-            url = url + `&sort=${sort}`
-        }
-        if (sort === 'asc') {
-            show.sort((a,b) => b.precio - a.precio)
-            url = url + `&sort=${sort}`
-        }
-
-        let totalPages = Math.ceil(showProducts.length/limit)
-        let hasNextPage = page < totalPages
-        let hasPrevPage = page > 1
-        let prevPage = Number(page) - 1
-        let nextPage = Number(page) + 1
+        let {limit, sort, query} = req.query
+        let url = `http://localhost:8080/producto`
+        if (limit) url = url + `?limit=${limit}`
+        if (query) url = url + `&query=${query}`
+        if (sort) url + `&sort=${sort}`
+        
+        let {docs, totalPages, hasNextPage, hasPrevPage, prevPage, nextPage} = await productManager.paginate(req.query)
+        
         let prevUrl = hasPrevPage ? url + `&page=${prevPage}`: null
         let nextUrl = hasNextPage ? url + `&page=${nextPage}`: null
 
         res.setHeader("Content-Type", "aplication/json")
         return res.json({
             status: 'success',
-            payload: show,
+            payload: docs,
             totalPages: totalPages,
             hasPrevPage: hasPrevPage,
             hasNextPage: hasNextPage,

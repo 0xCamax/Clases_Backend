@@ -1,5 +1,5 @@
 import { readFile, writeFile } from "fs/promises"
-import { Carrito } from "../models/carritoModel.js"
+import { Carrito } from "./models/carritoModel.js"
 
 export class CarritoManager {
 
