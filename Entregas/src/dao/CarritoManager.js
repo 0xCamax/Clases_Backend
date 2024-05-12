@@ -27,12 +27,12 @@ export class CarritoManager {
     }
 
     async getCid(cid){
-        return await Carrito.findOne({'_id': cid}).populate('productos.pid')
+        return await Carrito.findOne({'_id': cid}).populate('productos.pid').lean()
     }
 
     async getCarritos(){
         try {
-            this.carritos = await Carrito.find().populate('productos.pid')
+            this.carritos = await Carrito.find().populate('productos.pid').lean()
             return this.carritos
         } catch (error) {
             return this.carritos

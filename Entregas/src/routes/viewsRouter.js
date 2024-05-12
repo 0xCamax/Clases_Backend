@@ -63,15 +63,10 @@ router.get('/carrito/:cid', async (req, res) => {
     let { productos } = await carritoManager.getCid(cid)
     //no me deja agregar nueva propiedad total a cada prod a si que creare un nuevo array para poder renderizar
     let show = []
-    productos.forEach((p, i) => {
-        let r = {
-            ...p._doc.pid._doc,
-            cantidad: productos[i].cantidad,
-            total: productos[i].cantidad * p._doc.pid._doc.precio
-        }
-        show.push(r)
+    productos.forEach(p => {
+        p.total = p.cantidad * p.pid.precio
     })
-    let totalCarrito = show.reduce((acum, num) => num.total + acum, 0)
+    let totalCarrito = productos.reduce((acum, num) => num.total + acum, 0)
     res.render('carrito', {
         productosLength: productos.length > 0,
         cid,

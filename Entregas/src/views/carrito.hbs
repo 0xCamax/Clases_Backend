@@ -4,14 +4,14 @@
 </div>
 {{#if productosLength}}
     <ul id="lista">
-    {{#each show}}
-        <li id={{this._id}}>
-            <p>ID: {{this._id}}</p>
-            <p>Titulo: {{this.titulo}}</p>
-            <p>Descripcion: {{this.descripcion}}</p>
-            <p>Categoria: {{this.categoria}}</p>
-            <p>Imagen: {{this.imagen}}</p>
-            <p>Precio: ${{this.precio}}</p>
+    {{#each productos}}
+        <li id={{this.pid._id}}>
+            <p>ID: {{this.pid._id}}</p>
+            <p>Titulo: {{this.pid.titulo}}</p>
+            <p>Descripcion: {{this.pid.descripcion}}</p>
+            <p>Categoria: {{this.pid.categoria}}</p>
+            <p>Imagen: {{this.pid.imagen}}</p>
+            <p>Precio: ${{this.pid.precio}}</p>
             <p>Cantidad: {{this.cantidad}}</p>
             <p>Total: ${{this.total}}</p>
         </li>

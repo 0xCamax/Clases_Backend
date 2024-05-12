@@ -7,6 +7,7 @@ paginate.paginate.options = {
     page: 1
 }
 
+
 const productsSchema = new mongoose.Schema({
     titulo: { 
         type: String, 
