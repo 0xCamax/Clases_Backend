@@ -1,17 +1,48 @@
     <h2>Productos paginación</h2>
     <select name="categorias" id="categorias">
-        <option value="TODAS">TODAS</option>
+        <option value="null"></option>
         <option value="MEME">MEME</option>
         <option value="NFT">NFT</option>
         <option value="FINANCE">FINANCE</option>
         <option value="INFRASTRUCTURE">INFRASTRUCTURE</option>
+        <option value="P2E">P2E</option>
     </select>
     <select name="SORT" id="sort">
-        <option value="none">none</option>
+        <option value="null"></option>
         <option value="asc">ASCENDENTE</option>
         <option value="desc">DECENDENTE</option>
     </select>
     <button id="filtrar">Filtrar</button>
+    <button id="reset">Reset</button>
+    {{#if total}}
+    <div style="margin: 15px;">
+        {{#if hasPrevPage}}
+        <button id="prevPage" value="{{prevPage}}"><<</button>
+            {{else}}
+            <span id="prevPage"></span>
+        {{/if}}
+        <button id="page">{{page}}</button>
+        {{#if hasNextPage}}
+        <button id="nextPage" value="{{nextPage}}">>></button>
+            {{else}}
+            <span id="paginas"></span>
+        {{/if}}
+    <select style="margin: 15px;" name="paginas" id="paginas">
+        <option value="null"></option>
+        {{#each paginas}}
+        <option value="{{this}}">{{this}}</option>
+        {{/each}}
+    </select>
+    </div>
+        {{else}}
+        <span id="prevPage"></span>
+        <span id="nextPage"></span>
+        <span id="paginas"></span>
+    {{/if}}
+    <p>Mostrando: {{from}}-{{to}} ... de: {{totalDocs}}</p>
+    <label for="show">Show:</label>
+    <input type="number" min="1" max="{{totalDocs}}" step="1" id="limit">
+    <button id="mostrar">&#128269</button>
     {{#if productosLength}}
         <ol id="pagina">
         {{#each docs}}
@@ -21,16 +52,45 @@
                 <p>Descripcion: {{this.descripcion}}</p>
                 <p>Categoria: {{this.categoria}}</p>
                 <p>Imagen: {{this.imagen}}</p>
-                <p>Precio: {{this.precio}}</p>
+                <p>Precio: ${{this.precio}}</p>
                 <p>Codigo: {{this.codigo}}</p>
                 <p>Stock: {{this.stock}}</p>
             </li>
-            <button id='agregar'>Agregar</button>
+            <label for="cantidad" name="cantidad">Cantidad</label>
+            <input type="number" min="1" max="{{this.stock}}" class="cantidad">
+            <button class='agregar' value="{{this.id}}" onclick="agregar(this)">Agregar</button>
         {{/each}}
         </ol>
     {{else}}
         <ul id="pagina">
+            <li>No hay productos</li>
+            <span id="agregar"></span>
         </ul>
     {{/if}}
-    <script src="/socket.io/socket.io.js"></script>
+
     <script type="module" src="/js/productos.js"></script>
+    <script>
+        const agregar = async (producto) => {
+            try {
+                let pid = producto.value
+                let cantidad = producto.previousElementSibling.value
+                let cid = '663deaa4e7757e6f53b47bed'
+                const url = `${window.location.origin}/api/carrito/${cid}/producto/${pid}`
+                const req = {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json' // Especificar el tipo de contenido como JSON
+                    },
+                    body: JSON.stringify({
+                        cantidad: cantidad
+                    })
+                }
+                let response = await fetch(url, req)
+                let data = await response.json()
+                console.log(data)
+                if(data.status === "success") alert(`Se agregaron ${cantidad}\nproducto: ${pid} \nal carrito ${cid}`)
+            } catch (err) {
+                console.error(err)
+            }
+        }
+    </script>

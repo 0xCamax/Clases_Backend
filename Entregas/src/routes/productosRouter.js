@@ -16,7 +16,8 @@ router.get("/", async (req, res) => {
         if (query) url = url + `&query=${query}`
         if (sort) url + `&sort=${sort}`
         
-        let {docs, totalPages, hasNextPage, hasPrevPage, prevPage, nextPage} = await productManager.paginate(req.query)
+        let {docs, totalPages, hasNextPage, hasPrevPage, prevPage, nextPage, totalDocs} = await productManager.paginate(req.query)
+
         
         let prevUrl = hasPrevPage ? url + `&page=${prevPage}`: null
         let nextUrl = hasNextPage ? url + `&page=${nextPage}`: null
@@ -25,6 +26,7 @@ router.get("/", async (req, res) => {
         return res.json({
             status: 'success',
             payload: docs,
+            totalDocs: totalDocs,
             totalPages: totalPages,
             hasPrevPage: hasPrevPage,
             hasNextPage: hasNextPage,

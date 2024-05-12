@@ -1,0 +1,27 @@
+<h1>Carrito</h1>
+<div>
+    <h3>ID: {{cid}}</h3>
+</div>
+{{#if productosLength}}
+    <ul id="lista">
+    {{#each show}}
+        <li id={{this._id}}>
+            <p>ID: {{this._id}}</p>
+            <p>Titulo: {{this.titulo}}</p>
+            <p>Descripcion: {{this.descripcion}}</p>
+            <p>Categoria: {{this.categoria}}</p>
+            <p>Imagen: {{this.imagen}}</p>
+            <p>Precio: ${{this.precio}}</p>
+            <p>Cantidad: {{this.cantidad}}</p>
+            <p>Total: ${{this.total}}</p>
+        </li>
+    {{/each}}
+    </ul>
+    <div>
+        <h3>Total: ${{totalCarrito}}</h3>
+    </div>
+{{else}}
+    <ul id="lista">
+        <li>Carrito vacio</li>
+    </ul>
+{{/if}}

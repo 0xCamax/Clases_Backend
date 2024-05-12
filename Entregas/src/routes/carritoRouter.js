@@ -34,13 +34,18 @@ router.get("/:cid", async (req, res) => {
             throw new Error("No existe")
         } else {
             res.setHeader("Content-Type", "aplication/json")
-            return res.status(200).json(carrito)
+            return res.status(200).json({
+                status: 'success',
+                payload: carrito
+            })
         }
     } catch (error) {
         console.log(error)
         res.setHeader("Content-Type", "aplication/json")
         return res.status(500).json({
+            status: 'error',
             error: "Error al buscar carrito"
+
         })
     }
 })
@@ -65,11 +70,14 @@ router.post("/:cid/producto/:pid", async (req, res) => {
                 
                 res.setHeader("Content-Type", "aplication/json")
                 return res.status(200).json({
-                    respuesta: "Producto agregado",
-                    detalle: {
-                        pid: producto.id,
-                        cantidad: cantidad,
-                        carrito: carrito
+                    status: 'success',
+                    payload: {
+                        respuesta: "Producto agregado",
+                        detalle: {
+                            pid: producto.id,
+                            cantidad: cantidad,
+                            carrito: carrito
+                        }
                     }   
                 })
             }
@@ -102,12 +110,15 @@ router.put("/:cid/producto/:pid", async (req, res) => {
                 let carrito = await carritoManager.deletePid(cid, producto.id, cantidad)
                 res.setHeader("Content-Type", "aplication/json")
                 return res.status(200).json({
-                    respuesta: "Producto eliminado",
-                    detalle: {
-                        pid: producto.id,
-                        cantidad: cantidad,
-                        carrito: carrito
-                    }   
+                    status: 'success',
+                    payload:{
+                        respuesta: "Producto eliminado",
+                        detalle: {
+                            pid: producto.id,
+                            cantidad: cantidad,
+                            carrito: carrito
+                        }   
+                    }
                 })
             }
         }
@@ -126,8 +137,11 @@ router.delete('/:cid', async (req, res) => {
         let deleteAll = await carritoManager.deleteAll(cid)
         res.setHeader("Content-Type", "aplication/json")
         return res.status(200).json({
-            respuesta: 'Carrito vacio',
-            detalle: deleteAll
+            status: 'success',
+            payload: {
+                respuesta: 'Carrito vacio',
+                detalle: deleteAll
+            }
         })
     } catch (err){
         console.log(err)
