@@ -5,7 +5,8 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "dev": "nodemon ./src/main.js"
+    "dev": "nodemon ./src/main.js",
+    "commit-ajustes": "git add . && git commit -m 'ajustes' && git push origin master"
   },
   "keywords": [],
   "author": "",

@@ -41,7 +41,7 @@ router.get("/", async (req, res) => {
             prevLink: hasPrevPage ? prevUrl : null,
             nextLink: hasNextPage ? nextUrl : null
         })
-
+        
     } catch (error) {
         console.log(error)
         res.setHeader("Content-Type", "aplication/json")
