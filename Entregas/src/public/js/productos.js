@@ -23,6 +23,7 @@ filter.addEventListener('click', (e)=>{
     e.preventDefault()
     let query = categoria.options[categoria.selectedIndex].value
     let sort = orden.options[orden.selectedIndex].value
+    url = origin + pathname
     if(url.match(/query=\w+/) && query) {
         url = url.replace(/(query=)\w+/, `$1${query}`)
     } else if (query){

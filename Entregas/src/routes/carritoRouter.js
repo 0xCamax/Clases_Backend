@@ -16,11 +16,11 @@ router.post("/", async (req, res) => {
             respuesta: "Carrito creado exitosamente",
             detalle: carrito
         })
-    } catch (error) {
+    } catch (err) {
         res.setHeader("Content-Type", "aplication/json")
         return res.status(500).json({
             error: "Error al crear carrito",
-            detalle: error.message
+            detalle: err.message
         })
     }
 })
@@ -30,17 +30,14 @@ router.get("/:cid", async (req, res) => {
         let { cid } = req.params
 
         let carrito = await carritoManager.getCid(cid)
-        if (!carrito){
-            throw new Error("No existe")
-        } else {
-            res.setHeader("Content-Type", "aplication/json")
-            return res.status(200).json({
-                status: 'success',
-                payload: carrito
-            })
-        }
-    } catch (error) {
-        console.log(error)
+
+        res.setHeader("Content-Type", "aplication/json")
+        return res.status(200).json({
+            status: 'success',
+            payload: carrito
+        })
+    } catch (err) {
+        console.log(err)
         res.setHeader("Content-Type", "aplication/json")
         return res.status(500).json({
             status: 'error',
@@ -122,8 +119,8 @@ router.put("/:cid/producto/:pid", async (req, res) => {
                 })
             }
         }
-    } catch (error) {
-        console.log(error)
+    } catch (err) {
+        console.log(err)
         res.setHeader("Content-Type", "aplication/json")
         return res.status(500).json({
             error: "Error al eliminar producto del carrito"

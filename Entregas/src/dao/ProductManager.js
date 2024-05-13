@@ -2,41 +2,57 @@ import { Product } from "./models/productsModel.js"
 
 export class ProductManager {
 
-    constructor(){
-        this.products = []
-    }
-
     async add(producto){
-        let newProduct = new Product({
-            ...producto
-        })
-        return await newProduct.save()
+        try {
+            let newProduct = new Product({
+                ...producto
+            })
+            return await newProduct.save()
+        } catch (err) {
+            console.log(err)
+        }
     }
 
     async update(pid, producto){
-        await Product.updateOne({'_id':pid}, producto)
-        return await this.getPid(pid)
+        try {
+            await Product.updateOne({'_id':pid}, producto)
+            return await this.getPid(pid)
+        } catch (err){
+            console.log(err)
+        }
     }
 
     async delete(pid){
-        return await Product.findOneAndDelete({'_id': pid})
+        try {
+            return await Product.findOneAndDelete({'_id': pid})
+        } catch (err) {
+            console.log(err)
+        }
     }
 
     async getPid(pid){
-        return await Product.findOne({'_id': pid})
+        try {
+            return await Product.findOne({'_id': pid})
+        } catch (err) {
+            console.log(err)
+        }
     }
 
     async getProducts(){
         try {
-            this.products = await Product.find()
-            return this.products
-        } catch (error) {
-            return this.products
+            return await Product.find()
+        } catch (err) {
+            console.log(err)
+            return []
         }
     }
     async paginate(options) {
-        if (options.query) return await Product.paginate({'categoria': options.query}, options)
-        return await Product.paginate({}, options)
+        try {
+            if (options.query) return await Product.paginate({'categoria': options.query}, options)
+            return await Product.paginate({}, options)
+        } catch (err) {
+            console.log(err)
+        }
     }
 }
 
