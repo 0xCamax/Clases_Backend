@@ -1,6 +1,6 @@
 import { Carrito } from "./models/carritoModel.js"
 
-export class CarritoManager {
+class CarritoManager {
 
     async add(cid, pid, cantidad){
         try {
@@ -68,3 +68,5 @@ export class CarritoManager {
         }
     }
 }
+
+export const carritoManager = new CarritoManager()

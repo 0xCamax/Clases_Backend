@@ -1,11 +1,9 @@
 import { Router } from "express";
-import { productManager } from "./productosRouter.js";
-import { CarritoManager } from "../dao/CarritoManager.js"
+import { productManager } from "../dao/ProductManager.js";
+import { carritoManager } from "../dao/CarritoManager.js"
 
 
 export const router = Router()
-
-export const carritoManager = new CarritoManager()
 
 router.post("/", async (req, res) => {
     try {

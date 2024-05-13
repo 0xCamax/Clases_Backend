@@ -1,11 +1,9 @@
 import { Router } from "express";
-import { ProductManager } from "../dao/ProductManager.js"
-import { carritoManager } from "./carritoRouter.js";
+import { productManager } from "../dao/ProductManager.js"
+import { carritoManager } from "../dao/CarritoManager.js"
 
 
 export const router = Router()
-
-const productManager = new ProductManager()
 
 
 router.get("/", (req, res) => {
@@ -58,8 +56,8 @@ router.get('/productos', async (req, res) => {
         let { payload, hasPrevPage, hasNextPage, totalPages, page, totalDocs, prevPage, nextPage, limit, prevLink, nextLink } = data
         let paginas = []
         for (let i = 1; i <= totalPages; i++) paginas.push(i)
-            let from = (page - 1) * limit + 1
-    let to = from + payload.length - 1
+        let from = (page - 1) * limit + 1
+        let to = from + payload.length - 1
     
     res.render('productos', {
         productosLength: payload.length > 0,

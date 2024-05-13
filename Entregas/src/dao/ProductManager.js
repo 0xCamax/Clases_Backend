@@ -1,6 +1,6 @@
 import { Product } from "./models/productsModel.js"
 
-export class ProductManager {
+class ProductManager {
 
     async add(producto){
         try {
@@ -56,5 +56,4 @@ export class ProductManager {
     }
 }
 
-
-
+export const productManager = new ProductManager()

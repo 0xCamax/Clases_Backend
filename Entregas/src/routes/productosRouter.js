@@ -1,12 +1,8 @@
 import { Router } from "express";
-import { ProductManager } from "../dao/ProductManager.js"
+import { productManager } from "../dao/ProductManager.js"
 import { io } from "../main.js";
 
-
 export const router = Router()
-
-export const productManager = new ProductManager()
-
 
 router.get("/", async (req, res) => {
     try {
