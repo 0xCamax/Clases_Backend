@@ -46,7 +46,9 @@ reset.addEventListener('click', (e) => {
 mostrar.addEventListener('click', (e) => {
     e.preventDefault()
     let limit = document.getElementById('limit').value
-
+    if(url.match(/page=\d+/)) {
+        url = url.replace(/(page=)\d+/, `$1${1}`)
+    }
     if(url.match(/limit=\d+/) && limit) {
         url = url.replace(/(limit=)\d+/, `$1${limit}`)
     } else if (limit){
