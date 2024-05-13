@@ -12,15 +12,15 @@ router.get("/", async (req, res) => {
     try {
         let {limit, sort, query} = req.query
         let url = `http://localhost:8080/producto`
-        if (limit) url = url + `?limit=${limit}`
-        if (query) url = url + `&query=${query}`
-        if (sort) url + `&sort=${sort}`
+        if (limit) url += (url.includes('?') ? '&' : '?') + `limit=${limit}`
+        if (query) url += (url.includes('?') ? '&' : '?') + `query=${query}`
+        if (sort) url += (url.includes('?') ? '&' : '?') + `sort=${sort}`
         
         let {docs, totalPages, hasNextPage, hasPrevPage, prevPage, nextPage, totalDocs} = await productManager.paginate(req.query)
 
         
-        let prevUrl = hasPrevPage ? url + `&page=${prevPage}`: null
-        let nextUrl = hasNextPage ? url + `&page=${nextPage}`: null
+        let prevUrl = hasPrevPage ? url += (url.includes('?') ? '&' : '?') + `page=${prevPage}`: null
+        let nextUrl = hasNextPage ? url += (url.includes('?') ? '&' : '?') + `page=${nextPage}`: null
 
         res.setHeader("Content-Type", "aplication/json")
         return res.json({
