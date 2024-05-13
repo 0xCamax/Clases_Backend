@@ -10,30 +10,32 @@ export const productManager = new ProductManager()
 
 router.get("/", async (req, res) => {
     try {
-        let {limit, sort, query} = req.query
-        let url = `http://localhost:8080/producto`
-        if (limit) url += (url.includes('?') ? '&' : '?') + `limit=${limit}`
-        if (query) url += (url.includes('?') ? '&' : '?') + `query=${query}`
-        if (sort) url += (url.includes('?') ? '&' : '?') + `sort=${sort}`
-        
-        let {docs, totalPages, hasNextPage, hasPrevPage, prevPage, nextPage, totalDocs} = await productManager.paginate(req.query)
+        let { sort } = req.query
+        let clientUrl = req.headers['x-client-url']
 
+        if (sort === "asc") req.query.sort = {precio: 1}
+        if (sort === "desc") req.query.sort = {precio: -1}
         
-        let prevUrl = hasPrevPage ? url += (url.includes('?') ? '&' : '?') + `page=${prevPage}`: null
-        let nextUrl = hasNextPage ? url += (url.includes('?') ? '&' : '?') + `page=${nextPage}`: null
+        let {docs, totalPages, hasNextPage, hasPrevPage, prevPage, nextPage, totalDocs, limit, page} = await productManager.paginate(req.query)
+        
+        let prevUrl = clientUrl.match(/(page=)\d+/) ? clientUrl.replace(/(page=)\d+/, `$1${prevPage}`) : clientUrl + (clientUrl.includes('?') ? '&' : '?') + `page=${prevPage}`
+        let nextUrl = clientUrl.match(/(page=)\d+/) ? clientUrl.replace(/(page=)\d+/, `$1${nextPage}`) : clientUrl + (clientUrl.includes('?') ? '&' : '?') + `page=${nextPage}`
+    
 
         res.setHeader("Content-Type", "aplication/json")
         return res.json({
             status: 'success',
             payload: docs,
-            totalDocs: totalDocs,
-            totalPages: totalPages,
-            hasPrevPage: hasPrevPage,
-            hasNextPage: hasNextPage,
+            limit,
+            page,
+            totalDocs,
+            totalPages,
+            hasPrevPage,
+            hasNextPage,
             prevPage: hasPrevPage ? prevPage : null,
             nextPage: hasNextPage ? nextPage : null,
-            prevLink: prevUrl,
-            nextLink: nextUrl
+            prevLink: hasPrevPage ? prevUrl : null,
+            nextLink: hasNextPage ? nextUrl : null
         })
 
     } catch (error) {

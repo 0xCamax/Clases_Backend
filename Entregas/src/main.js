@@ -1,18 +1,19 @@
-import express from "express"
 import { router as productosRouter } from "./routes/productosRouter.js"
 import { router as carritoRouter } from "./routes/carritoRouter.js"
-import path from "path"
-import { Server } from "socket.io"
-import  handlebars  from "express-handlebars"
 import { router as viewsRouter } from "./routes/viewsRouter.js"
+import  handlebars  from "express-handlebars"
+import { Server } from "socket.io"
 import mongoose from "mongoose"
+import express from "express"
+import path from "path"
 
 
 
 const PORT = 8080
+const baseUrl = `http://localhost:${PORT}`
 const main = express()
 const server = main.listen(PORT, ()=>{
-    console.log(`Server online en el puerto http://localhost:${PORT}`)
+    console.log(`Server online en el puerto ${baseUrl}`)
 })
 
 const hbs = handlebars.create({
@@ -39,7 +40,12 @@ io.on("connection", socket => {
 })
 
 const enviroment = async () => {
-    await mongoose.connect('mongodb+srv://CoderHouse:coder.123321@cluster0.uz3kvfd.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0')
+    try {
+        await mongoose.connect('mongodb+srv://CoderHouse:coder.123321@cluster0.uz3kvfd.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0')
+        console.log('Conexion a BD lista')
+    } catch (err) {
+        console.log(err)
+    }
 }
 
 enviroment()

@@ -29,21 +29,28 @@ router.get("/realtimeproducts", async (req, res) => {
 })
 
 router.get('/productos', async (req, res) => {
-    let { sort } = req.query
-    if (sort === "asc") req.query["sort"] = {precio: 1}
-    if (sort === "desc") req.query["sort"] = {precio: -1}
-    let { docs, hasPrevPage, hasNextPage, totalPages, page, totalDocs, prevPage, nextPage, limit} = await productManager.paginate(req.query)
+    let {sort, query} = req.query
+    let queryParams = req._parsedUrl.search
+    let api = 'http://localhost:8080/api/producto' + (queryParams ? queryParams : '')
+    let response = await fetch(api, {
+        method: 'GET',
+        headers: {
+            'X-Client-Url': req.protocol + '://' + req.get('host') + req.originalUrl
+        }
+    })
+    let data = await response.json()
+    let { payload, hasPrevPage, hasNextPage, totalPages, page, totalDocs, prevPage, nextPage, limit, prevLink, nextLink } = data
     let paginas = []
     for (let i = 1; i <= totalPages; i++) paginas.push(i)
     let from = (page - 1) * limit + 1
-    let to = from + docs.length - 1
+    let to = from + payload.length - 1
 
     res.render('productos', {
-        productosLength: docs.length > 0,
+        productosLength: payload.length > 0,
         total: totalPages > 1,
         from,
         to,
-        docs,
+        productos: payload,
         hasNextPage,
         hasPrevPage,
         page,
@@ -52,7 +59,11 @@ router.get('/productos', async (req, res) => {
         paginas,
         prevPage,
         nextPage,
-        limit
+        prevLink,
+        nextLink,
+        limit,
+        sort,
+        query
     })
 })
 
