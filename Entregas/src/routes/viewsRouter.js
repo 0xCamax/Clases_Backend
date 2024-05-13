@@ -46,10 +46,11 @@ router.get('/productos', async (req, res) => {
         let {sort, query} = req.query
         let queryParams = req._parsedUrl.search
         let api = 'http://localhost:8080/api/producto' + (queryParams ? queryParams : '')
+        console.log(req)
         let response = await fetch(api, {
             method: 'GET',
             headers: {
-                'X-Client-Url': req.protocol + '://' + req.get('host') + req.originalUrl
+                'X-Client-Url': req.protocol + '://' + req.get('host') + req._parsedOriginalUrl.pathname
             }
         })
         let data = await response.json()

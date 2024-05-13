@@ -8,14 +8,22 @@ router.get("/", async (req, res) => {
     try {
         let { sort } = req.query
         let clientUrl = req.headers['x-client-url']
+        let search = req._parsedUrl.search
 
         if (sort === "asc") req.query.sort = {precio: 1}
         if (sort === "desc") req.query.sort = {precio: -1}
-        
-        let {docs, totalPages, hasNextPage, hasPrevPage, prevPage, nextPage, totalDocs, limit, page} = await productManager.paginate(req.query)
-        
-        let prevUrl = clientUrl.match(/(page=)\d+/) ? clientUrl.replace(/(page=)\d+/, `$1${prevPage}`) : clientUrl + (clientUrl.includes('?') ? '&' : '?') + `page=${prevPage}`
-        let nextUrl = clientUrl.match(/(page=)\d+/) ? clientUrl.replace(/(page=)\d+/, `$1${nextPage}`) : clientUrl + (clientUrl.includes('?') ? '&' : '?') + `page=${nextPage}`
+
+        let options = {}
+        Object.entries(req.query).forEach(([k,v]) => {
+            if(k === "query" || k === "limit" || k === "sort" || k === "page"){
+                options[k] = v
+            }
+        })
+
+        let {docs, totalPages, hasNextPage, hasPrevPage, prevPage, nextPage, totalDocs, limit, page} = await productManager.paginate(options)
+
+        let prevUrl = search ? (search.match(/(page=)\d+/) ? clientUrl + search.replace(/(page=)\d+/, `$1${prevPage}`) : clientUrl + search + `&page=${prevPage}`) : clientUrl + `?page=${prevPage}`
+        let nextUrl = search ? (search.match(/(page=)\d+/) ? clientUrl + search.replace(/(page=)\d+/, `$1${nextPage}`) : clientUrl + search + `&page=${nextPage}`) : clientUrl + `?page=${nextPage}`
     
 
         res.setHeader("Content-Type", "aplication/json")
