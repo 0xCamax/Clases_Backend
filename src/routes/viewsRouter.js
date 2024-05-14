@@ -1,6 +1,7 @@
 import { Router } from "express";
 import { productManager } from "../dao/ProductManager.js"
 import { carritoManager } from "../dao/CarritoManager.js"
+import { Product } from "../dao/models/productsModel.js";
 
 
 export const router = Router()
@@ -58,7 +59,7 @@ router.get('/productos', async (req, res) => {
         for (let i = 1; i <= totalPages; i++) paginas.push(i)
         let from = (page - 1) * limit + 1
         let to = from + payload.length - 1
-    
+        let categorias = await Product.distinct('categoria')
     res.render('productos', {
         productosLength: payload.length > 0,
         total: totalPages > 1,
@@ -77,7 +78,8 @@ router.get('/productos', async (req, res) => {
         nextLink,
         limit,
         sort,
-        query
+        query,
+        categorias
     })
     } catch (err) {
         console.log(err)

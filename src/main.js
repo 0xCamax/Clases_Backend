@@ -6,6 +6,7 @@ import { Server } from "socket.io"
 import mongoose from "mongoose"
 import express from "express"
 import path from "path"
+import { BD } from "./dao/data.js"
 
 
 
@@ -43,6 +44,11 @@ const enviroment = async () => {
     try {
         await mongoose.connect('mongodb+srv://CoderHouse:coder.123321@cluster0.uz3kvfd.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0')
         console.log('Conexion a BD lista')
+        let isEmpty = await BD.isEmpty()
+        if(isEmpty && mongoose.connection.readyState === 1){
+            await BD.crearProductos(10000)
+            console.log('Datos creados')
+        }
     } catch (err) {
         console.log(err)
     }

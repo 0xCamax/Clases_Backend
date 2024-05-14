@@ -1,11 +1,9 @@
     <h2>Productos paginación</h2>
     <select name="categorias" id="categorias">
         <option value="{{query}}" >{{query}}</option>
-        <option value="MEME">MEME</option>
-        <option value="NFT">NFT</option>
-        <option value="FINANCE">FINANCE</option>
-        <option value="INFRASTRUCTURE">INFRASTRUCTURE</option>
-        <option value="P2E">P2E</option>
+        {{#each categorias}}
+        <option value="{{this}}">{{this}}</option>
+        {{/each}}
     </select>
     <select name="SORT" id="sort">
         <option value="{{sort}}" >{{sort}}</option>
@@ -87,7 +85,7 @@
             try {
                 let pid = producto.value
                 let cantidad = producto.previousElementSibling.value
-                let cid = '663deaa4e7757e6f53b47bed'
+                let cid = "6642d795151c6381df439e51"
                 const api = `http://localhost:8080/api/carrito/${cid}/producto/${pid}`
                 const req = {
                     method: 'POST',
