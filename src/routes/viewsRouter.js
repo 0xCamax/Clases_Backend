@@ -89,7 +89,7 @@ router.get('/productos', async (req, res) => {
     }
 })
 
-//663deaa4e7757e6f53b47bed carrito hardcodeado 
+//6642d795151c6381df439e51 carrito hardcodeado 
 //se tomara en base al login mas adelante
 router.get('/carrito/:cid', async (req, res) => {
     try {
