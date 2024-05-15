@@ -9,6 +9,7 @@ router.get("/", async (req, res) => {
         let { sort } = req.query
         let clientUrl = req.headers['x-client-url']
         let search = req._parsedUrl.search
+        let api = req.protocol + '://' + req.get('host') + req.baseUrl
 
         if (sort === "asc") req.query.sort = {precio: 1}
         if (sort === "desc") req.query.sort = {precio: -1}
@@ -20,11 +21,18 @@ router.get("/", async (req, res) => {
             }
         })
 
-        let {docs, totalPages, hasNextPage, hasPrevPage, prevPage, nextPage, totalDocs, limit, page} = await productManager.paginate(options)
+        let productos = await productManager.paginate(options)
+        let categorias = await productManager.distinct('categoria')
+        let {docs, totalPages, hasNextPage, hasPrevPage, prevPage, nextPage, totalDocs, limit, page} = productos
 
-        let prevUrl = search ? (search.match(/(page=)\d+/) ? clientUrl + search.replace(/(page=)\d+/, `$1${prevPage}`) : clientUrl + search + `&page=${prevPage}`) : clientUrl + `?page=${prevPage}`
-        let nextUrl = search ? (search.match(/(page=)\d+/) ? clientUrl + search.replace(/(page=)\d+/, `$1${nextPage}`) : clientUrl + search + `&page=${nextPage}`) : clientUrl + `?page=${nextPage}`
-    
+        let nextApi = search ? (search.match(/(page=)\d+/) ? api + search.replace(/(page=)\d+/, `$1${nextPage}`) : api + search + `&page=${nextPage}`) : api + `?page=${nextPage}`
+        let prevApi = search ? (search.match(/(page=)\d+/) ? api + search.replace(/(page=)\d+/, `$1${prevPage}`) : api + search + `&page=${prevPage}`) : api + `?page=${prevPage}`
+
+        io.emit('productos', {
+            productos,
+            nextApi,
+            prevApi
+        })
 
         res.setHeader("Content-Type", "aplication/json")
         return res.json({
@@ -34,12 +42,13 @@ router.get("/", async (req, res) => {
             page,
             totalDocs,
             totalPages,
+            categorias,
             hasPrevPage,
             hasNextPage,
-            prevPage: hasPrevPage ? prevPage : null,
-            nextPage: hasNextPage ? nextPage : null,
-            prevLink: hasPrevPage ? prevUrl : null,
-            nextLink: hasNextPage ? nextUrl : null
+            prevPage,
+            nextPage,
+            nextApi: hasNextPage ? nextApi : null,
+            prevApi: hasPrevPage ? prevApi : null
         })
         
     } catch (error) {
@@ -52,7 +61,6 @@ router.get("/", async (req, res) => {
             }
         })
     }
-
 })
 
 router.get("/:pid", async (req, res) => {

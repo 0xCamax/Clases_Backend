@@ -1,39 +1,41 @@
-    <h2>Productos paginación</h2>
-    <select name="categorias" id="categorias">
-        <option value="{{query}}" >{{query}}</option>
-        {{#each categorias}}
-        <option value="{{this}}">{{this}}</option>
-        {{/each}}
-    </select>
-    <select name="SORT" id="sort">
-        <option value="{{sort}}" >{{sort}}</option>
-        <option value="asc">asc</option>
-        <option value="desc">desc</option>
-    </select>
-    <button id="filtrar">Filtrar</button>
-    <button id="reset">Reset</button>
-    {{#if total}}
-    <div style="margin: 15px;">
-        {{#if hasPrevPage}}
-        <a href="{{prevLink}}"><<</a>
-        {{/if}}
-        <p id="page" style="display:inline-block;">{{page}}</p>
-        {{#if hasNextPage}}
-        <a href="{{nextLink}}">>></a>
-        {{/if}}
-    <select style="margin: 15px;" name="paginas" id="paginas">
-        <option value="null"></option>
+<h2>Productos paginación</h2>
+<i>**sin reload**</i><br><br>
+<select id="categorias">
+    <option></option>
+    {{#each categorias}}
+    <option value="{{this}}">{{this}}</option>
+    {{/each}}
+</select>
+<select id="sort">
+    <option></option>
+    <option value="asc">asc</option>
+    <option value="desc">desc</option>
+</select>
+<button id="filtrar">Filtrar</button>
+<button id="reset">Reset</button>
+
+<div style="margin: 15px;">
+    {{#if hasPrevPage}}
+    <button id="prevBtn" value="{{prevApi}}"><<</button>
+        {{else}}
+        <button id="prevBtn" value="{{prevApi}}" hidden><<</button>
+    {{/if}}
+    <p id="page" style="display:inline-block;">{{page}}</p>
+    {{#if hasNextPage}}
+    <button id="nextBtn" value="{{nextApi}}">>></button>
+        {{else}}
+        <button id="nextBtn" value="{{nextApi}}" hidden>>></button>
+    {{/if}}
+    <select style="margin: 15px;" id="paginas">
         {{#each paginas}}
         <option value="{{this}}">{{this}}</option>
         {{/each}}
     </select>
-    </div>
-        {{else}}
-        <span id="paginas"></span>
-    {{/if}}
+</div>
+<div id="renderProducts">
     <p>Mostrando: {{from}}-{{to}} de {{totalDocs}}</p>
     <label for="show">Show:</label>
-    <input type="number" min="1" max="{{totalDocs}}" step="1" id="limit">
+    <input type="number" min="1" max="{{totalDocs}}" step="1" id="limit" value="{{limit}}">
     <button id="mostrar">&#128269</button>
     {{#if productosLength}}
         <ul id="pagina">
@@ -48,7 +50,7 @@
                 <p>Codigo: {{this.codigo}}</p>
                 <p>Stock: {{this.stock}}</p>
             </li>
-            <label for="cantidad" name="cantidad">Cantidad</label>
+            <label for="cantidad">Cantidad</label>
             <input type="number" min="1" max="{{this.stock}}" class="cantidad">
             <button class='agregar' value="{{this.id}}" onclick="agregar(this)">Agregar</button>
         {{/each}}
@@ -59,48 +61,8 @@
             <span id="agregar"></span>
         </ul>
     {{/if}}
-        {{#if total}}
-    <div style="margin: 15px;">
-        {{#if hasPrevPage}}
-        <a href="{{prevLink}}"><<</a>
-        {{/if}}
-        <p id="page" style="display:inline-block;">{{page}}</p>
-        {{#if hasNextPage}}
-        <a href="{{nextLink}}">>></a>
-        {{/if}}
-    <select style="margin: 15px;" name="paginas" id="paginas">
-        <option value="null"></option>
-        {{#each paginas}}
-        <option value="{{this}}">{{this}}</option>
-        {{/each}}
-    </select>
-    </div>
-        {{else}}
-        <span id="paginas"></span>
-    {{/if}}
+</div>
 
-    <script type="module" src="/js/productos.js"></script>
-    <script>
-        const agregar = async (producto) => {
-            try {
-                let pid = producto.value
-                let cantidad = producto.previousElementSibling.value
-                let cid = "6642d795151c6381df439e51"
-                const api = `http://localhost:8080/api/carrito/${cid}/producto/${pid}`
-                const req = {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        cantidad: cantidad
-                    })
-                }
-                let response = await fetch(api, req)
-                let data = await response.json()
-                if(data.status === "success") alert(`Se agregaron ${cantidad}\nproducto: ${pid} \nal carrito ${cid}`)
-            } catch (err) {
-                console.error(err)
-            }
-        }
-    </script>
+<script async="true" type="module" src="/js/products.js"></script>
+
+

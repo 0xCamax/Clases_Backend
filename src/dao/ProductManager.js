@@ -54,6 +54,14 @@ class ProductManager {
             console.log(err)
         }
     }
+
+    async distinct(prop){
+        try {
+            return await Product.distinct(prop)
+        } catch (err){
+            console.log(err)
+        }
+    }
 }
 
 export const productManager = new ProductManager()

@@ -1,7 +1,7 @@
 import { Router } from "express";
 import { productManager } from "../dao/ProductManager.js"
 import { carritoManager } from "../dao/CarritoManager.js"
-import { Product } from "../dao/models/productsModel.js";
+
 
 
 export const router = Router()
@@ -41,52 +41,36 @@ router.get("/realtimeproducts", async (req, res) => {
     }
 })
 
+//evita el reload
 router.get('/productos', async (req, res) => {
-    try {
-
-        let {sort, query} = req.query
-        let queryParams = req._parsedUrl.search
-        let api = 'http://localhost:8080/api/producto' + (queryParams ? queryParams : '')
-        let response = await fetch(api, {
-            method: 'GET',
-            headers: {
-                'X-Client-Url': req.protocol + '://' + req.get('host') + req._parsedOriginalUrl.pathname
-            }
-        })
-        let data = await response.json()
-        let { payload, hasPrevPage, hasNextPage, totalPages, page, totalDocs, prevPage, nextPage, limit, prevLink, nextLink } = data
-        let paginas = []
-        for (let i = 1; i <= totalPages; i++) paginas.push(i)
-        let from = (page - 1) * limit + 1
-        let to = from + payload.length - 1
-        let categorias = await Product.distinct('categoria')
+    let api = 'http://localhost:8080/api/producto'
+    let response = await fetch(api, {
+        method: 'GET'
+    })
+    let data = await response.json()
+    let { categorias, totalPages, page, nextApi, prevApi, payload, totalDocs, limit, hasNextPage, hasPrevPage } = data
+    let paginas = []
+    for (let i = 1; i <= totalPages; i++) paginas.push(i)
+    let from = (page - 1) * limit + 1
+    let to = from + payload.length - 1
+    
     res.render('productos', {
         productosLength: payload.length > 0,
-        total: totalPages > 1,
+        total: paginas.length != 0,
+        categorias,
+        paginas,
+        page,
+        nextApi,
+        prevApi,
+        productos: payload,
+        totalDocs,
         from,
         to,
-        productos: payload,
         hasNextPage,
         hasPrevPage,
-        page,
-        totalPages,
-        totalDocs,
-        paginas,
-        prevPage,
-        nextPage,
-        prevLink,
-        nextLink,
-        limit,
-        sort,
-        query,
-        categorias
+        api,
+        limit
     })
-    } catch (err) {
-        console.log(err)
-        res.render("error", {
-            err
-        })
-    }
 })
 
 //6642d795151c6381df439e51 carrito hardcodeado 

@@ -27,7 +27,7 @@ const titulos = [
         descripcion: "Multi Token Standard"
     },
     {
-        titulo: "1363",
+        titulo: "ERC-1363",
         descripcion: "Payable Token"
     },
     {
@@ -118,6 +118,12 @@ class Productos {
         let empty = docs === 0
         return empty
     }
+
+    async updateMany(filter, update) {
+        return await Product.updateMany(filter, update)
+    }
 }
 
 export const BD = new Productos(titulos, categorias)
+
+
