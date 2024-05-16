@@ -16,15 +16,15 @@
 
 <div style="margin: 15px;">
     {{#if hasPrevPage}}
-    <button id="prevBtn" value="{{prevApi}}"><<</button>
+    <button id="prevBtn" value="{{prevLink}}"><<</button>
         {{else}}
-        <button id="prevBtn" value="{{prevApi}}" hidden><<</button>
+        <button id="prevBtn" value="{{prevLink}}" hidden><<</button>
     {{/if}}
     <p id="page" style="display:inline-block;">{{page}}</p>
     {{#if hasNextPage}}
-    <button id="nextBtn" value="{{nextApi}}">>></button>
+    <button id="nextBtn" value="{{nextLink}}">>></button>
         {{else}}
-        <button id="nextBtn" value="{{nextApi}}" hidden>>></button>
+        <button id="nextBtn" value="{{nextLink}}" hidden>>></button>
     {{/if}}
     <select style="margin: 15px;" id="paginas">
         {{#each paginas}}

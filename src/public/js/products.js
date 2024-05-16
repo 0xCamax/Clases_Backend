@@ -1,4 +1,6 @@
 
+
+
 //elementos doc
 let categorias = document.getElementById('categorias')
 let sort = document.getElementById('sort')
@@ -18,12 +20,13 @@ let showBtn = document.getElementById('mostrar') //agregar limit
 //apilink
 let location = "http://localhost:8080/api/producto"
 
+
 async function filtrar(e){
     e.preventDefault()
     let query = categorias.options[categorias.selectedIndex].value
     let orden = sort.options[sort.selectedIndex].value
     let url = location
-    console.log(url)
+
     if(url.match(/query=\w+/) && query && !url.includes(query)) {
         url = url.replace(/\s/g, '')
         url = url.replace(/(query=)\w+/, `$1${query}`)
@@ -44,7 +47,7 @@ async function filtrar(e){
         try {
             await render(e, url)
             location = url
-        } catch {
+        } catch (err) {
             console.log(err)
         }
     } else {
@@ -58,7 +61,7 @@ async function reset(e){
         location = url
         categorias.selectedIndex = 0 
         sort.selectedIndex = 0
-    } catch {
+    } catch (err) {
         console.log(err)
     }
 }
@@ -75,7 +78,7 @@ async function paginas(e){
     try {
         await render(e, url)
         location = url.replace(/\s/g, "+")
-    } catch {
+    } catch (err) {
         console.log(err)
     }
 }
@@ -94,7 +97,7 @@ async function show(e){
     try {
         await render(e, url)
         location = url 
-    } catch {
+    } catch (err) {
         console.log(err)
     }
 }
@@ -131,9 +134,10 @@ async function render (e, url) {
     let getProducts = await fetch(call, {
         method: 'GET'
     })
+
     let data = await getProducts.json()
 
-    const { payload, totalPages, page, totalDocs, prevApi, nextApi, limit, hasNextPage, hasPrevPage } = data
+    const { payload, totalPages, page, totalDocs, prevLink, nextLink, limit, hasNextPage, hasPrevPage } = data
     
     let pages = [`<option></option>`]
     for (let i = 1; i <= totalPages; i++) {
@@ -159,8 +163,8 @@ async function render (e, url) {
     let to = from + payload.length - 1
     
     pagina.innerText = page
-    prevPageBtn.value = prevApi
-    nextPageBtn.value = nextApi
+    prevPageBtn.value = prevLink
+    nextPageBtn.value = nextLink
     
     let options = document.createElement('div')
     options.innerHTML = 
@@ -204,15 +208,3 @@ filtrarBtn.onclick = filtrar
 resetBtn.onclick = reset
 paginasBtn.onchange = paginas
 showBtn.onclick = show
-
-
-
-
-
-
-
-
-
-
-
-

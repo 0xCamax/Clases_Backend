@@ -48,7 +48,8 @@ router.get('/productos', async (req, res) => {
         method: 'GET'
     })
     let data = await response.json()
-    let { categorias, totalPages, page, nextApi, prevApi, payload, totalDocs, limit, hasNextPage, hasPrevPage } = data
+    let { categorias, totalPages, page, nextLink, prevLink, payload, totalDocs, limit, hasNextPage, hasPrevPage } = data
+
     let paginas = []
     for (let i = 1; i <= totalPages; i++) paginas.push(i)
     let from = (page - 1) * limit + 1
@@ -60,8 +61,8 @@ router.get('/productos', async (req, res) => {
         categorias,
         paginas,
         page,
-        nextApi,
-        prevApi,
+        nextLink,
+        prevLink,
         productos: payload,
         totalDocs,
         from,

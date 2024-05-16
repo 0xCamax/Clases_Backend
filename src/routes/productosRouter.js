@@ -7,7 +7,7 @@ export const router = Router()
 router.get("/", async (req, res) => {
     try {
         let { sort } = req.query
-        let search = req._parsedUrl.search
+        let searchParam = new URLSearchParams(req._parsedUrl.search)
         let api = req.protocol + '://' + req.get('host') + req.baseUrl
 
         if (sort === "asc") req.query.sort = {precio: 1}
@@ -17,6 +17,11 @@ router.get("/", async (req, res) => {
         Object.entries(req.query).forEach(([k,v]) => {
             if(k === "query" || k === "limit" || k === "sort" || k === "page"){
                 options[k] = v
+                if(k === "sort"){
+                    v === 1 ? searchParam.set(k, "asc") : searchParam.set(k, "desc")
+                } else {
+                    searchParam.set(k, v)
+                }
             }
         })
 
@@ -24,14 +29,16 @@ router.get("/", async (req, res) => {
         let categorias = await productManager.distinct('categoria')
         let {docs, totalPages, hasNextPage, hasPrevPage, prevPage, nextPage, totalDocs, limit, page} = productos
 
-        let nextApi = search ? (search.match(/(page=)\d+/) ? api + search.replace(/(page=)\d+/, `$1${nextPage}`) : api + search + `&page=${nextPage}`) : api + `?page=${nextPage}`
-        let prevApi = search ? (search.match(/(page=)\d+/) ? api + search.replace(/(page=)\d+/, `$1${prevPage}`) : api + search + `&page=${prevPage}`) : api + `?page=${prevPage}`
-
-        io.emit('productos', {
-            productos,
-            nextApi,
-            prevApi
-        })
+        let prevLink = null
+        let nextLink = null
+        if(prevPage) {
+            searchParam.has("page") ? searchParam.set("page", prevPage) : searchParam.append("page", prevPage)
+            prevLink = api + '?' + searchParam.toString()
+        }
+        if(nextPage) {
+            searchParam.has("page") ? searchParam.set("page", nextPage) : searchParam.append("page", nextPage)
+            nextLink = api + '?' + searchParam.toString()
+        }
 
         res.setHeader("Content-Type", "aplication/json")
         return res.json({
@@ -46,8 +53,8 @@ router.get("/", async (req, res) => {
             hasNextPage,
             prevPage,
             nextPage,
-            nextApi: hasNextPage ? nextApi : null,
-            prevApi: hasPrevPage ? prevApi : null
+            nextLink,
+            prevLink
         })
         
     } catch (error) {
