@@ -7,7 +7,6 @@ export const router = Router()
 router.get("/", async (req, res) => {
     try {
         let { sort } = req.query
-        let clientUrl = req.headers['x-client-url']
         let search = req._parsedUrl.search
         let api = req.protocol + '://' + req.get('host') + req.baseUrl
 

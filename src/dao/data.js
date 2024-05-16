@@ -40,11 +40,11 @@ const titulos = [
     },
     {
         titulo: "ERC-5507",
-        descripcion: "	Refundable Tokens"
+        descripcion: "Refundable Tokens"
     },
     {
         titulo: "ERC-5528",
-        descripcion: "	Refundable Fungible Token"
+        descripcion: "Refundable Fungible Token"
     },
     {
         titulo: "ERC-6809",
