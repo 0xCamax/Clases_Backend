@@ -72,5 +72,6 @@ export const notAuth = (req, res, next) => {
         })
         res.redirect('/')
     }
+    next()
 }
 
