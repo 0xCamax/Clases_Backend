@@ -7,6 +7,7 @@ let sort = document.getElementById('sort')
 let renderProducts = document.getElementById('renderProducts')
 let pagina = document.getElementById('page')
 let paginaSelect = document.getElementById('paginas')
+let carrito = document.getElementById('carrito-btn').value
 
 
 //con eventos
@@ -107,8 +108,12 @@ async function agregar () {
     try {
         let pid = this.value
         let cantidad = this.previousElementSibling.value
-        let cid = "6642d795151c6381df439e51"
-        const api = `http://localhost:8080/api/carrito/${cid}/producto/${pid}`
+        console.log(!carrito)
+        if (!carrito) {
+            window.location.href = "http://localhost:8080/login"
+            return 
+        }
+        const api = `http://localhost:8080/api/carrito/${carrito}/producto/${pid}`
         const req = {
             method: 'POST',
             headers: {
@@ -120,7 +125,7 @@ async function agregar () {
         }
         let response = await fetch(api, req)
         let data = await response.json()
-        if(data.status === "success") alert(`Se agregaron ${cantidad}\nproducto: ${pid} \nal carrito ${cid}`)
+        if(data.status === "success") alert(`Se agregaro al carrito!`)
     } catch (err) {
         console.error(err)
     }
@@ -135,9 +140,7 @@ async function render (e, url) {
         method: 'GET'
     })
 
-    let data = await getProducts.json()
-
-    const { payload, totalPages, page, totalDocs, prevLink, nextLink, limit, hasNextPage, hasPrevPage } = data
+    const { payload, totalPages, page, totalDocs, prevLink, nextLink, limit, hasNextPage, hasPrevPage } = await getProducts.json()
     
     let pages = [`<option></option>`]
     for (let i = 1; i <= totalPages; i++) {
@@ -146,18 +149,8 @@ async function render (e, url) {
     }
     paginaSelect.innerHTML = pages.join('') 
     
-    if(hasNextPage){
-        nextPageBtn.hidden = false
-    }
-    if(hasPrevPage){
-        prevPageBtn.hidden = false
-    }
-    if(!hasNextPage){
-        nextPageBtn.hidden = true
-    }
-    if(!hasPrevPage){
-        prevPageBtn.hidden = true
-    }
+    hasNextPage ? nextPageBtn.hidden = false : nextPageBtn.hidden = true
+    hasPrevPage ? prevPageBtn.hidden = false : prevPageBtn.hidden = true
 
     let from = (page - 1) * limit + 1
     let to = from + payload.length - 1
@@ -194,7 +187,6 @@ async function render (e, url) {
         let buttonAdd = document.createElement('button')
         buttonAdd.onclick = agregar
         buttonAdd.value = productos.id
-        buttonAdd.id = 'agregar'
         buttonAdd.innerText = 'Agregar'
         li.append(buttonAdd)
         list.append(li)

@@ -1,3 +1,22 @@
-<div>
-    <h1>Hola Mundo!</h1>
-</div>
+
+
+{{#if user}}
+    <div>
+        <h1>Hola {{user.username}}!</h1>
+    </div>
+{{else}}
+    <div>
+        <h1>Hola mundo!</h1>
+    </div>
+    <div style="margin: 15px; display: flex; justify-content: center; width: 200px; flex-direction: column;">
+        <button style="margin: 2px;" id="login" hidden>Login</button>
+        <button style="margin: 2px;" id="google-login" hidden>Login with Google</button>
+        <button style="margin: 2px;" id="github-login">Login with Github</button>
+    </div>
+    <div style="margin: 15px; display:flex; justify-content: center; width: 200px; flex-direction: column;">
+        <button style="margin: 2px;" id="registro" hidden>Registro</button>
+    </div>
+{{/if}}
+
+
+<script type="module" src="./js/login.js"></script>

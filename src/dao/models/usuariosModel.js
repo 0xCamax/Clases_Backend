@@ -8,7 +8,6 @@ const usuarioSchema = new mongoose.Schema({
     },
     pw: {
         type: String,
-        require: true
     },
     carrito: {
         type: mongoose.Schema.Types.ObjectId,

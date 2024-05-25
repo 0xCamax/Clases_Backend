@@ -6,7 +6,7 @@
   "type": "module",
   "scripts": {
     "dev": "nodemon ./src/main.js",
-    "commit-ajustes": "git add . && git commit -m ajustes && git push origin master"
+    "commit-ajustes": "git add . && git commit -m ajustes && git push origin main"
   },
   "keywords": [],
   "author": "",
@@ -22,6 +22,8 @@
     "mongodb": "^6.6.1",
     "mongoose": "^8.3.4",
     "mongoose-paginate-v2": "^1.8.0",
+    "passport": "^0.7.0",
+    "passport-github2": "^0.1.12",
     "socket.io": "^4.7.5"
   }
 }

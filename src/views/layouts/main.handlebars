@@ -5,12 +5,25 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{title}}</title>
 </head>
-<body>
-    <nav>
-        <button><a href="/home">Home</a></button>
-        <button><a href="/realtimeproducts">Real time products</a></button>
-        <button><a href="/productos">Productos</a></button>
-        <button><a href="/carrito/6642d795151c6381df439e51">Carrito</a></button>
+<body style="background-color:rgb(32, 32, 32); color:white">
+
+    <nav style="display: flex; justify-content:space-between">
+        <div>
+            <button><a href="/home">Home</a></button>
+            <button><a href="/realtimeproducts">Real time products</a></button>
+            <button><a href="/productos">Productos</a></button>
+        </div>
+        {{#if user}}
+        <div>
+            <button id="carrito-btn" value="{{user.carrito}}" style="padding: 0;"><a href="/carrito"><img src="./assets/carrito.png" width="14px" height="14px"></a></button>
+            <button><a href="/perfil">Perfil</a></button>
+            <button><a href="/api/user/logout?clienturl=http://localhost:8080/">Logout</a></button>
+        </div>
+        {{else}}
+        <div>
+            <span id="carrito-btn"></span>
+        </div>
+        {{/if}}
     </nav>
     {{{body}}}
 </body>

@@ -9,7 +9,10 @@ import express from "express"
 import path from "path"
 import { BD } from "./dao/data.js"
 import cookieParser from "cookie-parser"
-import 'dotenv/config.js'
+import { initPass } from "./config/passpostConfig.js"
+import passport from "passport"
+import { checkAuth } from "./middleware/auth.js"
+
 
 const PORT = 8080
 const main = express()
@@ -33,11 +36,12 @@ main.set("views", path.resolve("src", "views"))
 main.set("view engine", "hbs")
 main.use(express.static(path.resolve("src", "public")))
 
-
+initPass()
+main.use(passport.initialize())
 main.use("/api/producto", productosRouter)
 main.use("/api/carrito",  carritoRouter)
 main.use("/api/user", userRouter)
-main.use("/", viewsRouter)
+main.use("/", checkAuth, viewsRouter)
 
 export const io = new Server(server)
 

@@ -52,7 +52,7 @@
             </li>
             <label for="cantidad">Cantidad</label>
             <input type="number" min="1" max="{{this.stock}}" class="cantidad">
-            <button class='agregar' value="{{this.id}}">Agregar</button>
+            <button class='agregar' value="{{this.id}}" onclick="agregar(this)">Agregar</button>
         {{/each}}
         </ul>
     {{else}}
@@ -64,5 +64,32 @@
 </div>
 
 <script async="true" type="module" src="/js/products.js"></script>
-
+<script>
+    async function agregar (element) {
+    try {
+        let pid = element.value
+        let cantidad = element.previousElementSibling.value
+        let carrito = document.getElementById('carrito-btn').value
+        if (!carrito) {
+            window.location.href = "http://localhost:8080/login"
+            return 
+        }
+        const api = `http://localhost:8080/api/carrito/${carrito}/producto/${pid}`
+        const req = {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                cantidad: cantidad
+            })
+        }
+        let response = await fetch(api, req)
+        let data = await response.json()
+        if(data.status === "success") alert(`Se agregaro al carrito!`)
+    } catch (err) {
+        console.error(err)
+    }
+}
+</script>
 

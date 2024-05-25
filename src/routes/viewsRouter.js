@@ -1,22 +1,32 @@
 import { Router } from "express";
 import { productManager } from "../dao/ProductManager.js"
 import { carritoManager } from "../dao/CarritoManager.js"
-
-
+import { forceAuth, notAuth } from "../middleware/auth.js";
 
 export const router = Router()
 
-
 router.get("/", (req, res) => {
-    res.render("index")
+    let user = req.user
+    res.render("index", {
+        layout: 'main',
+        title: 'Coder',
+        user
+
+    })
+})
+
+router.get('/login', notAuth, (req, res) => {
+    res.render('login')
 })
 
 router.get("/home", async (req,res)=> {
     try {
+        let user = req.user
         let productos = await productManager.getProducts()
         res.render("home",{ 
             productosLength: productos.length > 0,
-            productos
+            productos,
+            user
         })
     } catch (err) {
         console.log(err)
@@ -28,10 +38,12 @@ router.get("/home", async (req,res)=> {
 
 router.get("/realtimeproducts", async (req, res) => {
     try {
+        let user = req.user
         let productos = await productManager.getProducts()
         res.render("realTime", {
             productosLength: productos.length > 0,
-            productos
+            productos,
+            user
         })
     } catch (err) {
         console.log(err)
@@ -41,8 +53,8 @@ router.get("/realtimeproducts", async (req, res) => {
     }
 })
 
-//evita el reload
 router.get('/productos', async (req, res) => {
+    let user = req.user
     let api = 'http://localhost:8080/api/producto'
     let response = await fetch(api, {
         method: 'GET'
@@ -70,15 +82,15 @@ router.get('/productos', async (req, res) => {
         hasNextPage,
         hasPrevPage,
         api,
-        limit
+        limit,
+        user
     })
 })
 
-//6642d795151c6381df439e51 carrito hardcodeado 
-//se tomara en base al login mas adelante
-router.get('/carrito/:cid', async (req, res) => {
+router.get('/carrito', forceAuth, async (req, res) => {
     try {
-        let { cid } = req.params
+        let user = req.user
+        let { carrito: cid } = user
         let { productos } = await carritoManager.getCid(cid)
         productos.forEach(p => {
             p.total = p.cantidad * p.pid.precio
@@ -88,7 +100,8 @@ router.get('/carrito/:cid', async (req, res) => {
             productosLength: productos.length > 0,
             cid,
             productos, 
-            totalCarrito
+            totalCarrito,
+            user
         })
     } catch (err){
         console.log(err)
@@ -96,6 +109,13 @@ router.get('/carrito/:cid', async (req, res) => {
             err
         })
     }
+})
+
+router.get('/perfil', forceAuth, async (req, res) => {
+    let user = req.user
+    res.render('perfil', {
+        user
+    })
 })
 
 

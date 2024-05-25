@@ -5,8 +5,19 @@ import bcrypt from 'bcrypt'
 import jwt from "jsonwebtoken"
 import { SECRET_KEY } from "../config.js"
 import { auth } from "../middleware/auth.js"
+import passport from "passport"
+
+
 
 export const router = Router()
+
+router.get('/error', (req, res) => {
+    res.setHeader('Content-Type','application/json');
+    return res.status(500).json({
+            status: 'error',
+            message:`Error inesperado en el servidor - Intente más tarde, o contacte a su administrador`
+    })
+})
 
 router.post('/registro', async (req, res) => {
     try {
@@ -51,7 +62,6 @@ router.post('/login', async (req, res) => {
 
         const match = await bcrypt.compare(contraseña, user.pw)
 
-
         if(!match) {
             throw new Error('Contraseña invalida')
         }
@@ -73,14 +83,12 @@ router.post('/login', async (req, res) => {
     }
 })
 
-router.post('/logout', auth, async (req, res) => {
+router.get('/logout', auth, async (req, res) => {
     try {
+        const clienturl = req.query.clienturl
         res.setHeader('Content-Type', 'application/json')
-        res.cookie('token', '', { httpOnly: true, secure: true, sameSite: 'strict', expires: new Date(0) });
-        return res.status(200).json({
-            status: "success",
-            message: "Logout exitoso"
-        })
+        res.cookie('authToken', '', { httpOnly: true, secure: true, sameSite: 'strict', expires: new Date(0) });
+        res.redirect(clienturl)
     } catch (err) {
         res.setHeader('Content-Type', 'application/json')
         return res.status(400).json({
@@ -88,4 +96,24 @@ router.post('/logout', auth, async (req, res) => {
             error: err.message
         })
     }
+})
+
+router.get('/github', passport.authenticate('github'))
+
+router.get('/callbackGithub', passport.authenticate('github', {failureRedirect: 'api/user/error', session: false}), async (req, res) => {
+    try {
+        const { id, usuario, carrito } = req.user
+        const token = jwt.sign({id: id, username: usuario, carrito: carrito}, SECRET_KEY, {expiresIn: '7d'})
+        
+        res.cookie('authToken', token, { httpOnly: true, secure: true, sameSite: 'strict' })
+        res.redirect('http://localhost:8080/')
+    } catch (error) {
+        return res.status(500).json({
+            status: 'error',
+            message: 'error en inicio de sesion'
+        })
+    }
+})
+
+router.get('/google', async (req, res) => {
 })
