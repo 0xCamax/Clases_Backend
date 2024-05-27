@@ -24,9 +24,10 @@ export const initPass = () => {
             },
             async (jwt_payload, done) => {
                 try {
-                    const user = await usuariosManager.getBy({usuario: jwt_payload.usuario})
+                    const user = await usuariosManager.getBy({usuario: jwt_payload.name})
                     return done(null, user)
                 } catch (err) {
+                    console.log(err)
                     return done(err, false)
                 }
             }
@@ -55,8 +56,7 @@ export const initPass = () => {
                     if(!match) {
                         throw new Error('Contraseña invalida')
                     }
-            
-                    const token = jwt.sign({id: user.id, usuario: user.usuario}, SECRET_KEY, {expiresIn: '7d'})
+                    const token = jwt.sign({id: user.id, name: user.usuario, cart: user.carrito, provider: user.provider, rol: user.rol}, SECRET_KEY, {expiresIn: '7d'})
                     return done(null, token)
                     
                 } catch (err) {
@@ -84,7 +84,7 @@ export const initPass = () => {
                         }
                     )
 
-                    const token = jwt.sign({id: user.id, usuario: user.usuario, carrito: user.carrito}, SECRET_KEY, {expiresIn: '7d'})
+                    const token = jwt.sign({id: user.id, name: user.usuario, cart: user.carrito, provider: user.provider, rol: user.rol}, SECRET_KEY, {expiresIn: '7d'})
                     
                     return done(null, token)
                     
@@ -114,8 +114,8 @@ export const initPass = () => {
                             provider: 'google'
                         }
                     )
-    
-                    const token = jwt.sign({id: user._id, usuario: user.usuario, carrito: user.carrito}, SECRET_KEY, {expiresIn: '7d'})
+
+                    const token = jwt.sign({id: user.id, name: user.usuario, cart: user.carrito, provider: user.provider, rol: user.rol}, SECRET_KEY, {expiresIn: '7d'})
     
                     return done(null, token)
                     

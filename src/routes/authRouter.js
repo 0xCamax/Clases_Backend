@@ -22,9 +22,8 @@ router.get('/error', (req, res) => {
 //login/registro rapido con passport
 router.post('/access', passport.authenticate('local', { session: false}), async (req, res)=> {
     try {
-        const token = req.user;
+        const token = req.user
         const clientUrl = req.query.clientUrl
-        console.log(clientUrl)
         res.cookie('authToken', token, { httpOnly: true, secure: true, sameSite: 'strict' });
         return res.redirect(clientUrl)
     } catch (error) {
@@ -104,7 +103,7 @@ router.post('/login', async (req, res) => {
     }
 })
 
-router.get('/logout', passport.authenticate('jwt', { session: false }), async (req, res) => {
+router.get('/logout',passport.authenticate('jwt', {session: false}), async (req, res) => {
     try {
         const clientUrl = req.query.clientUrl
         res.setHeader('Content-Type', 'application/json')

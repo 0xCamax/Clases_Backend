@@ -90,7 +90,7 @@ router.get('/productos', async (req, res) => {
 router.get('/carrito', forceAuth, async (req, res) => {
     try {
         let user = req.user
-        let { carrito: cid } = user
+        let { cart: cid } = user
         let { productos } = await carritoManager.getCid(cid)
         productos.forEach(p => {
             p.total = p.cantidad * p.pid.precio
