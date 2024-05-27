@@ -10,6 +10,7 @@ export const checkAuth = (req, res, next) => {
         jwt.verify(token, SECRET_KEY, (err, user) => {
             if (err) {
                 console.log('Token inválido o expirado')
+                res.cookie('authToken', '', { httpOnly: true, secure: true, sameSite: 'strict', expires: new Date(0)})
                 return res.redirect('/login')
             } else {
                 req.user = user
@@ -17,7 +18,6 @@ export const checkAuth = (req, res, next) => {
         })
         next()
     } else {
-        console.log('Inicia sesion')
         next()
     }
 }
