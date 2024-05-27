@@ -26,7 +26,7 @@ router.post('/access', passport.authenticate('local', { session: false}), async 
         const clientUrl = req.query.clientUrl
         console.log(clientUrl)
         res.cookie('authToken', token, { httpOnly: true, secure: true, sameSite: 'strict' });
-        return res.redirect(clientUrl);
+        return res.redirect(clientUrl)
     } catch (error) {
         console.log(error)
         return res.status(500).json({ 
@@ -36,6 +36,8 @@ router.post('/access', passport.authenticate('local', { session: false}), async 
     }
 })
 
+
+//se puede eliminar
 router.post('/registro', async (req, res) => {
     try {
         const { usuario, contraseña } = req.body;
@@ -68,6 +70,8 @@ router.post('/registro', async (req, res) => {
     }
 })
 
+
+// se puede eliminar
 router.post('/login', async (req, res) => {
     try {
         const { usuario, contraseña } = req.body
