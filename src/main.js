@@ -1,6 +1,6 @@
 import { router as productosRouter } from "./routes/productosRouter.js"
 import { router as carritoRouter } from "./routes/carritoRouter.js"
-import { router as userRouter } from "./routes/userRouter.js"
+import { router as userRouter } from "./routes/authRouter.js"
 import { router as viewsRouter } from "./routes/viewsRouter.js"
 import  handlebars  from "express-handlebars"
 import { Server } from "socket.io"
@@ -9,16 +9,14 @@ import express from "express"
 import path from "path"
 import { BD } from "./dao/data.js"
 import cookieParser from "cookie-parser"
-import { initPass } from "./config/passpostConfig.js"
+import { initPass } from "./config/passportConfig.js"
 import passport from "passport"
 import { checkAuth } from "./middleware/auth.js"
+import { MONGOOSE_URL, SECRET_KEY } from "./config.js"
 
 
 const PORT = 8080
 const main = express()
-const server = main.listen(PORT, ()=>{
-    console.log(`Server online en el puerto http://localhost:${PORT}/`)
-})
 
 const hbs = handlebars.create({
     defaultLayout: "main",
@@ -40,28 +38,32 @@ initPass()
 main.use(passport.initialize())
 main.use("/api/producto", productosRouter)
 main.use("/api/carrito",  carritoRouter)
-main.use("/api/user", userRouter)
+main.use("/api/auth", userRouter)
 main.use("/", checkAuth, viewsRouter)
 
-export const io = new Server(server)
-
-io.on("connection", socket => {
-    console.log("cliente conectado")
-})
+export let io;
 
 const enviroment = async () => {
     try {
-        await mongoose.connect('mongodb+srv://CoderHouse:coder.123321@cluster0.uz3kvfd.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0')
+        await mongoose.connect(MONGOOSE_URL)
         console.log('Conexion a BD lista')
         let isEmpty = await BD.isEmpty()
         if(isEmpty && mongoose.connection.readyState === 1){
             await BD.crearProductos(10000)
             console.log('Datos creados')
         }
+        const server = main.listen(PORT, ()=>{
+            console.log(`Server online en el puerto http://localhost:${PORT}/`)
+        })
+        io = new Server(server)
+        io.on('connect', socket => {
+            console.log('Cliente conectado')
+        })
     } catch (err) {
         console.log(err)
     }
 }
 
 enviroment()
+
 

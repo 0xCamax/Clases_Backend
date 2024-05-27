@@ -3,9 +3,9 @@ import { usuariosManager } from "../dao/UsuariosManager.js"
 import { carritoManager } from "../dao/CarritoManager.js"
 import bcrypt from 'bcrypt'
 import jwt from "jsonwebtoken"
-import { SECRET_KEY } from "../config.js"
-import { auth } from "../middleware/auth.js"
 import passport from "passport"
+import { SECRET_KEY } from "../config.js"
+import { clientUrl } from "../middleware/clientUrl.js"
 
 
 
@@ -17,6 +17,23 @@ router.get('/error', (req, res) => {
             status: 'error',
             message:`Error inesperado en el servidor - Intente más tarde, o contacte a su administrador`
     })
+})
+
+//login/registro rapido con passport
+router.post('/access', passport.authenticate('local', { session: false}), async (req, res)=> {
+    try {
+        const token = req.user;
+        const clientUrl = req.query.clientUrl
+        console.log(clientUrl)
+        res.cookie('authToken', token, { httpOnly: true, secure: true, sameSite: 'strict' });
+        return res.redirect(clientUrl);
+    } catch (error) {
+        console.log(error)
+        return res.status(500).json({ 
+            status: 'error', 
+            error: 'Error en inicio de sesión'
+        })
+    }
 })
 
 router.post('/registro', async (req, res) => {
@@ -83,12 +100,13 @@ router.post('/login', async (req, res) => {
     }
 })
 
-router.get('/logout', auth, async (req, res) => {
+router.get('/logout', passport.authenticate('jwt', { session: false }), async (req, res) => {
     try {
-        const clienturl = req.query.clienturl
+        const clientUrl = req.query.clientUrl
         res.setHeader('Content-Type', 'application/json')
-        res.cookie('authToken', '', { httpOnly: true, secure: true, sameSite: 'strict', expires: new Date(0) });
-        res.redirect(clienturl)
+        res.cookie('authToken', '', { httpOnly: true, secure: true, sameSite: 'strict', expires: new Date(0)})
+        console.log('Logout con exito')
+        res.redirect(clientUrl)
     } catch (err) {
         res.setHeader('Content-Type', 'application/json')
         return res.status(400).json({
@@ -98,15 +116,23 @@ router.get('/logout', auth, async (req, res) => {
     }
 })
 
-router.get('/github', passport.authenticate('github'))
+router.get('/github', clientUrl, passport.authenticate('github'))
 
-router.get('/callbackGithub', passport.authenticate('github', {failureRedirect: 'api/user/error', session: false}), async (req, res) => {
+router.get('/github/callback', passport.authenticate('github', { session: false }), async (req, res) => {
     try {
-        const { id, usuario, carrito } = req.user
-        const token = jwt.sign({id: id, username: usuario, carrito: carrito}, SECRET_KEY, {expiresIn: '7d'})
+        const token  = req.user
+        const clientUrl = decodeURIComponent(req.cookies.clientUrl)
         
-        res.cookie('authToken', token, { httpOnly: true, secure: true, sameSite: 'strict' })
-        res.redirect('http://localhost:8080/')
+        res.cookie('authToken', token, { httpOnly: true, secure: true, sameSite: 'strict'})
+
+        if(clientUrl) {
+            return res.redirect(clientUrl)
+        } else {
+            return res.status(200).json({
+                status: 'success',
+                message: 'Usuario autenticado con github'
+            })
+        }
     } catch (error) {
         return res.status(500).json({
             status: 'error',
@@ -115,5 +141,20 @@ router.get('/callbackGithub', passport.authenticate('github', {failureRedirect: 
     }
 })
 
-router.get('/google', async (req, res) => {
+router.get('/google', clientUrl, passport.authenticate('google'))
+
+router.get('/google/callback', passport.authenticate('google', { session: false }), (req, res)=>{
+    const token = req.user
+    const clientUrl = decodeURIComponent(req.cookies.clientUrl)
+
+    res.cookie('authToken', token, { httpOnly: true, secure: true, sameSite: 'strict' })
+
+    if(clientUrl) {
+        return res.redirect(clientUrl)
+    } else {
+        return res.status(200).json({
+            status: 'success',
+            message: 'Usuario autenticado con google'
+        })
+    }
 })

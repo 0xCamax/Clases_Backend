@@ -15,6 +15,10 @@ const usuarioSchema = new mongoose.Schema({
         require: true,
         _id: false
     },
+    provider: {
+        type: String,
+        default: null
+    },
     rol: {
         type: String,
         default: 'user'
@@ -22,19 +26,19 @@ const usuarioSchema = new mongoose.Schema({
 })
 
 usuarioSchema.pre('save', function(next) {
-    const user = this;
+    const user = this
     if (user.isNew || user.isModified('role')) {
         if (user.rol !== 'user' && user.rol !== 'admin') {
-        return next(new Error('Invalid role'));
+        return next(new Error('Invalid role'))
         }
         if (user.rol === 'admin') {
-        return next();
+        return next()
         }
         if (!user.isNew && user.rol !== 'user') {
-        user.rol = 'user';
+        user.rol = 'user'
         }
     }
-    next();
-    });
+    next()
+    })
 
 export const Usuario = mongoose.model('Usuario', usuarioSchema, 'Usuarios')

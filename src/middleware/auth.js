@@ -1,29 +1,5 @@
 import jwt from 'jsonwebtoken'
-import { SECRET_KEY } from '../config.js';
-
-
-//para api
-export const auth = (req, res, next) => {
-    const token = req.cookies.authToken
-    if (!token){
-        return res.status(403).json({
-            status: 'error',
-            message: 'Usuario no autenticado'
-        })
-    }
-    jwt.verify(token, SECRET_KEY, (err, user) => {
-        if (err) {
-            return res.status(403).json({
-                status: 'error',
-                message: 'Token inválido o expirado'
-            });
-        }
-
-        req.user = user
-        next()
-    })
-}
-
+import { SECRET_KEY } from '../config.js'
 
 //para el router views
 

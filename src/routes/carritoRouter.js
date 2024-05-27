@@ -1,7 +1,7 @@
 import { Router } from "express";
 import { productManager } from "../dao/ProductManager.js";
 import { carritoManager } from "../dao/CarritoManager.js"
-import { auth, forceAuth } from "../middleware/auth.js";
+import passport from "passport";
 
 
 export const router = Router()
@@ -46,7 +46,7 @@ router.get("/:cid", async (req, res) => {
     }
 })
 
-router.post("/:cid/producto/:pid", auth, async (req, res) => {
+router.post("/:cid/producto/:pid", passport.authenticate('jwt', {session: false}), async (req, res) => {
     try {
         let { cid, pid } = req.params
         let { cantidad } = req.body
@@ -87,7 +87,7 @@ router.post("/:cid/producto/:pid", auth, async (req, res) => {
     }
 })
 
-router.put("/:cid/producto/:pid", auth, async (req, res) => {
+router.put("/:cid/producto/:pid", passport.authenticate('jwt', {session: false}), async (req, res) => {
     try {
         let { cid, pid } = req.params
         let { cantidad } = req.body
@@ -127,7 +127,7 @@ router.put("/:cid/producto/:pid", auth, async (req, res) => {
     }
 })
 
-router.delete('/:cid', auth, async (req, res) => {
+router.delete('/:cid', passport.authenticate('jwt', {session: false}), async (req, res) => {
     try{
         let { cid } = req.params
         let deleteAll = await carritoManager.deleteAll(cid)
