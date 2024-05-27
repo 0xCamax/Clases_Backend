@@ -45,6 +45,7 @@ export let io;
 
 const enviroment = async () => {
     try {
+        console.log('Cargando BD...')
         await mongoose.connect(MONGOOSE_URL)
         console.log('Conexion a BD lista')
         let isEmpty = await BD.isEmpty()
