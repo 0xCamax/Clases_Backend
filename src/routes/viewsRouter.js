@@ -89,9 +89,15 @@ router.get('/productos', async (req, res) => {
 
 router.get('/carrito', forceAuth, async (req, res) => {
     try {
-        let user = req.user
-        let { cart: cid } = user
-        let { productos } = await carritoManager.getCid(cid)
+        const user = req.user
+        const { cart: cid } = user
+
+        const api = 'http://localhost:8080/api/carrito/'+cid
+        const carritos = await fetch(api, {
+            method: 'get'
+        })
+        const { payload: { productos } } = await carritos.json()
+
         productos.forEach(p => {
             p.total = p.cantidad * p.pid.precio
         })
