@@ -1,6 +1,3 @@
-
-
-
 //elementos doc
 let categorias = document.getElementById('categorias')
 let sort = document.getElementById('sort')
@@ -108,7 +105,6 @@ async function agregar () {
     try {
         let pid = this.value
         let cantidad = this.previousElementSibling.value
-        console.log(!carrito)
         if (!carrito) {
             window.location.href = "http://localhost:8080/login"
             return 

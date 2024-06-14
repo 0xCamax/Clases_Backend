@@ -1,4 +1,4 @@
-import { Product } from "./models/productsModel.js";
+import { Product } from "../dao/models/productsModel.js";
 
 // generar data falsa para pruebas
 
@@ -73,9 +73,9 @@ class Productos {
     async crearProductos (i) {
         for(i; i > 0; i--){
             let { titulo, descripcion } = this.#getInfo()
-            let precio = this.#getPrecio()
+            let precio =  floor(random() * (5000 - 100 + 1)) + 100
             let codigo = this.#getCodigo()
-            let stock = this.#getStock()
+            let stock = floor(random() * (420 - 69 + 1)) + 69
             let categoria = this.#getCategoria()
             let newProduct = new Product({
                 titulo: titulo,
@@ -99,18 +99,10 @@ class Productos {
         return this.#categorias[index]
     }
 
-    #getPrecio() {
-        return floor(random() * (5000 - 100 + 1)) + 100
-    }
-
     #getCodigo(){
         let code = this.#code.toString(16).padStart(6, "0")
         this.#code++
         return code 
-    }
-
-    #getStock(){
-        return floor(random() * (420 - 69 + 1)) + 69
     }
 
     async isEmpty() {

@@ -15,18 +15,20 @@
         </div>
         {{#if user}}
         <div>
-            <button id="carrito-btn" value="{{user.cart}}" style="padding: 0;"><a href="/carrito"><img src="./assets/carrito.png" width="14px" height="14px"></a></button>
+            <button id="carrito-btn" value="{{carrito}}" style="padding: 0;"><a href="/carrito"><img src="./assets/carrito.png" width="14px" height="14px"></a></button>
             <button><a href="/perfil">Perfil</a></button>
-            <button><a href="/api/auth/logout?clientUrl=http://localhost:8080/">Logout</a></button>
+            <button id="logout">Logout</button>
         </div>
         {{else}}
         <div>
             <span id="carrito-btn"></span>
-            <button><a href="/login">Login/Registro</a></button>
+            <button><a href="/login">Login</a></button>
+            <button><a href="/registro">Registro</a></button>
         </div>
         {{/if}}
     </nav>
     {{{body}}}
+    <script type="module" src="./js/auth.js"></script>
 </body>
 
 </html>

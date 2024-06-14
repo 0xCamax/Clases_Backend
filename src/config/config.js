@@ -9,5 +9,7 @@ export const {
     GOOGLE_SECRET,
     GOOGLE_CID,
     MONGOOSE_URL,
+    ADMIN,
+    MAIL_KEY
 } = process.env
 

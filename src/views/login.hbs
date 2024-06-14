@@ -1,18 +1,17 @@
 <h2>Inicia sesion</h2>
 <div style="margin: 15px; display: flex; justify-content: center; width: 200px; flex-direction: column;">
-    <form style="display: flex; flex-direction: column;" id="access" action="http://localhost:8080/api/auth/access?clientUrl=http://localhost:8080" method="post">
-        <label for="username">Usuario</label>
+    <form style="display: flex; flex-direction: column;" id="login-form" action="http://localhost:8080/api/auth/login" method="post">
+        <label for="username">Usuario o email</label>
         <input style="align-self:center; width: 192px;" type="text" name="username" id="username" required>
         <label for="pw">Contraseña</label>
         <input style="align-self:center; width: 192px;" type="password" name="password" id="pw" required>
-        <button style="width: 200px; align-self:center; margin-top: 5px" type="submit" style="margin: 2px;" id="login" >Access</button>
+        <button style="width: 200px; align-self:center; margin-top: 5px" type="submit" style="margin: 2px;" id="login" >Login</button>
     </form>
+    <span id="login_response_msg"></span>
 </div>
 <div style="margin: 15px; display:flex; justify-content: center; width: 200px; flex-direction: column; text-align:center">
     <p>---------------or---------------</p>
 </div>
 <div style="margin: 15px; display:flex; justify-content: center; width: 200px; flex-direction: column;">
     <button style="margin: 2px;" id="google-login">Login with Google</button>
-    <button style="margin: 2px;" id="github-login">Login with Github</button>
 </div>
-<script type="module" src="./js/auth.js"></script>

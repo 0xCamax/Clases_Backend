@@ -1,10 +1,9 @@
-import mongoose from "mongoose";
+import mongoose from "mongoose"
+
 
 const usuarioSchema = new mongoose.Schema({
     usuario: {
-        type: String,
-        require: true,
-        unique: true
+        type: String
     },
     pw: {
         type: String,
@@ -14,6 +13,12 @@ const usuarioSchema = new mongoose.Schema({
         ref: 'Carrito',
         require: true,
         _id: false
+    },
+    email: {
+        type: String,
+        required: true,
+        unique: true,
+        match: [/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/, 'Invalid email']
     },
     provider: {
         type: String,
@@ -31,14 +36,11 @@ usuarioSchema.pre('save', function(next) {
         if (user.rol !== 'user' && user.rol !== 'admin') {
         return next(new Error('Invalid role'))
         }
-        if (user.rol === 'admin') {
-        return next()
-        }
-        if (!user.isNew && user.rol !== 'user') {
+        if (user.rol !== 'user') {
         user.rol = 'user'
         }
     }
     next()
-    })
+})
 
 export const Usuario = mongoose.model('Usuario', usuarioSchema, 'Usuarios')

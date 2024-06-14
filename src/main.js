@@ -7,12 +7,12 @@ import { Server } from "socket.io"
 import mongoose from "mongoose"
 import express from "express"
 import path from "path"
-import { BD } from "./dao/data.js"
+import { BD } from "./utils/data.js"
 import cookieParser from "cookie-parser"
-import { initPass } from "./config/passportConfig.js"
+import { initPass } from "./middleware/passport.js"
 import passport from "passport"
 import { checkAuth } from "./middleware/auth.js"
-import { MONGOOSE_URL, SECRET_KEY } from "./config.js"
+import { MONGOOSE_URL } from "./config/config.js"
 
 
 const PORT = 8080

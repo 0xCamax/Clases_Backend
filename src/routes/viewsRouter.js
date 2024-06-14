@@ -1,6 +1,4 @@
 import { Router } from "express";
-import { productManager } from "../dao/ProductManager.js"
-import { carritoManager } from "../dao/CarritoManager.js"
 import { forceAuth, notAuth } from "../middleware/auth.js";
 
 export const router = Router()
@@ -10,23 +8,31 @@ router.get("/", (req, res) => {
     res.render("index", {
         layout: 'main',
         title: 'Coder',
-        user
-
+        user: user? (user.username ? user.username : user._id) : null,
+        carrito: user? user.carrito : null
     })
 })
 
 router.get('/login', notAuth, (req, res) => {
     res.render('login')
 })
+router.get('/registro', notAuth, (req, res) => {
+    res.render('registro')
+})
 
 router.get("/home", async (req,res)=> {
     try {
         let user = req.user
-        let productos = await productManager.getProducts()
+        let api = 'http://localhost:8080/api/producto'
+        const get_products = await fetch(api, {
+            method: 'GET'
+        })
+        const data = await get_products.json()
+        const productos = data.payload
         res.render("home",{ 
             productosLength: productos.length > 0,
             productos,
-            user
+            user: user? (user.username ? user.username : user._id) : null
         })
     } catch (err) {
         console.log(err)
@@ -39,11 +45,16 @@ router.get("/home", async (req,res)=> {
 router.get("/realtimeproducts", async (req, res) => {
     try {
         let user = req.user
-        let productos = await productManager.getProducts()
+        let api = 'http://localhost:8080/api/producto'
+        const get_products = await fetch(api, {
+            method: 'GET'
+        })
+        const data = await get_products.json()
+        const productos = data.payload
         res.render("realTime", {
             productosLength: productos.length > 0,
             productos,
-            user
+            user: user? (user.username ? user.username : user._id) : null
         })
     } catch (err) {
         console.log(err)
@@ -83,20 +94,23 @@ router.get('/productos', async (req, res) => {
         hasPrevPage,
         api,
         limit,
-        user
+        user: user? (user.username ? user.username : user._id) : null,
+        carrito: user? user.carrito : null
     })
 })
 
 router.get('/carrito', forceAuth, async (req, res) => {
     try {
         const user = req.user
-        const { cart: cid } = user
+        const { carrito: cid } = user
 
         const api = 'http://localhost:8080/api/carrito/'+cid
         const carritos = await fetch(api, {
             method: 'get'
         })
-        const { payload: { productos } } = await carritos.json()
+
+        const data = await carritos.json()
+        const { productos } = data.payload
 
         productos.forEach(p => {
             p.total = p.cantidad * p.pid.precio
@@ -107,7 +121,7 @@ router.get('/carrito', forceAuth, async (req, res) => {
             cid,
             productos, 
             totalCarrito,
-            user
+            user: user? (user.username ? user.username : user._id) : null
         })
     } catch (err){
         console.log(err)
@@ -120,7 +134,7 @@ router.get('/carrito', forceAuth, async (req, res) => {
 router.get('/perfil', forceAuth, async (req, res) => {
     let user = req.user
     res.render('perfil', {
-        user
+        user: user? (user.username ? user.username : user._id) : null
     })
 })
 

@@ -1,15 +1,14 @@
 import jwt from 'jsonwebtoken'
-import { SECRET_KEY } from '../config.js'
+import { SECRET_KEY } from '../config/config.js'
 
 //para el router views
 
 export const checkAuth = (req, res, next) => {
     const token = req.cookies.authToken
-
     if(token) {
         jwt.verify(token, SECRET_KEY, (err, user) => {
             if (err) {
-                console.log('Token inválido o expirado')
+                console.log('Token inválido o expirado', err)
                 res.cookie('authToken', '', { httpOnly: true, secure: true, sameSite: 'strict', expires: new Date(0)})
                 return res.redirect('/login')
             } else {

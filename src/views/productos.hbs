@@ -78,7 +78,7 @@
         const req = {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type':'application/json'
             },
             body: JSON.stringify({
                 cantidad: cantidad
@@ -86,7 +86,7 @@
         }
         let response = await fetch(api, req)
         let data = await response.json()
-        if(data.status === "success") alert(`Se agregaro al carrito!`)
+        if(data.status === "success") alert(`Se agrego al carrito!`)
     } catch (err) {
         console.error(err)
     }

@@ -16,10 +16,11 @@ class UsuariosManager {
     async findOrCreate(filtro, info) {
         let user = await this.getBy(filtro)
         if (!user) {
-            return this.create({
+            user = await this.create({
                 ...info,
                 carrito: await carritoManager.add()
             })
+            return user
         } else {
             return user
         }

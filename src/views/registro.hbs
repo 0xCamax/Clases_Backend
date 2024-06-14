@@ -1,0 +1,15 @@
+<h2>Registro</h2>
+<div style="margin: 15px; display: flex; justify-content: center; width: 200px; flex-direction: column;">
+    <form style="display: flex; flex-direction: column;" id="registro-form" action="http://localhost:8080/api/auth/registro" method="post">
+        <label for="username">Email</label>
+        <input style="align-self:center; width: 192px;" type="text" name="username" id="username" required>
+        <label for="pw">Contraseña</label>
+        <input style="align-self:center; width: 192px;" type="password" name="password" id="pw" required>
+        <label for="code">Codigo de verificacion</label>
+        <input style="align-self:center; width: 192px;" type="text" name="code" id="code" required>
+        <span id="code_msg" hidden></span>
+        <button style="width: 200px; align-self:center; margin-top: 5px" type="button" id="get_code">Obtener codigo</button>
+        <button style="width: 200px; align-self:center; margin-top: 15px;" type="submit" id="registro" >Registrar</button>
+    </form>
+    <span id="register_response_msg"></span>
+</div>
