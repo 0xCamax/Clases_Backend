@@ -1,4 +1,4 @@
-import { Product } from "../dao/models/productsModel.js";
+import { Product } from "../models/productsModel.js";
 
 // generar data falsa para pruebas
 

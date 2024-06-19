@@ -1,9 +1,9 @@
-import { carritoManager } from "../dao/CarritoManager.js"
-import { productManager } from "../dao/ProductManager.js"
+import { carritoManager } from "../services/CarritoService.js"
+import { productManager } from "../services/ProductService.js"
 
-export async function add_cart (req, res) {
+export async function create_cart (req, res) {
     try {
-        let carrito = await carritoManager.add()
+        let carrito = await carritoManager.create()
     
         res.setHeader("Content-Type", "aplication/json")
         return res.status(200).json({
@@ -121,7 +121,7 @@ export async function update_cart(req, res) {
     }
 }
 
-export async function delete_cart(req, res){
+export async function empty_cart(req, res){
     try{
         let { cid } = req.params
         let deleteAll = await carritoManager.deleteAll(cid)

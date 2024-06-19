@@ -1,5 +1,5 @@
-import { usuariosManager } from "../dao/UsuariosManager.js"
-import { carritoManager } from "../dao/CarritoManager.js"
+import { usuariosManager } from "../services/UsuariosService.js"
+import { carritoManager } from "../services/CarritoService.js"
 import bcrypt from 'bcrypt'
 import jwt from "jsonwebtoken"
 import { SECRET_KEY } from "../config/config.js"

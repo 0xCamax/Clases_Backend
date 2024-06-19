@@ -1,4 +1,4 @@
-import { usuariosManager } from "../dao/UsuariosManager.js"
+import { usuariosManager } from '../services/UsuariosService.js'
 import { Strategy as GoogleStrategy} from 'passport-google-oauth20'
 import { Strategy as LocalStrategy, Strategy } from "passport-local"
 import passport from "passport"

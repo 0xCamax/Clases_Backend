@@ -1,4 +1,4 @@
-import { productManager } from "../dao/ProductManager.js"
+import { productManager } from "../services/ProductService.js";
 import { io } from "../main.js";
 
 export async function get_all(req, res){

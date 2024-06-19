@@ -1,26 +1,29 @@
-import { Carrito } from "./models/carritoModel.js"
+import { Carrito } from "../models/carritoModel.js"
 
-class CarritoManager {
+export class CarritoDAO {
+    async create(){
+        try{
+            let carrito = new Carrito()
+            return await carrito.save()
+        } catch (err){
+            return console.log(err)
+        }
+    }
 
     async add(cid, pid, cantidad){
         try {
-            if (!cid){
-                let carrito = new Carrito()
-                return await carrito.save()
+            let carrito = await this.getCid(cid)
+            let index = carrito.productos.findIndex(p => p.pid._id == pid.toString())
+            if (index !== -1){
+                carrito.productos[index].cantidad += Number(cantidad)
             } else {
-                let carrito = await this.getCid(cid)
-                let index = carrito.productos.findIndex(p => p.pid._id == pid.toString())
-                if (index !== -1){
-                    carrito.productos[index].cantidad += Number(cantidad)
-                } else {
-                    carrito.productos.push({
-                        pid: pid,
-                        cantidad: cantidad
-                    })
-                }
-                await Carrito.updateOne({'_id':cid}, {productos: carrito.productos})
-                return carrito
+                carrito.productos.push({
+                    pid: pid,
+                    cantidad: cantidad
+                })
             }
+            await Carrito.updateOne({'_id':cid}, {productos: carrito.productos})
+            return carrito
         } catch (err){
             return console.log(err)
         }
@@ -68,5 +71,3 @@ class CarritoManager {
         }
     }
 }
-
-export const carritoManager = new CarritoManager()
