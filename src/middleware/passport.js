@@ -1,6 +1,6 @@
-import { usuariosManager } from '../services/UsuariosService.js'
+import UsuariosService from '../services/UsuariosService.js'
 import { Strategy as GoogleStrategy} from 'passport-google-oauth20'
-import { Strategy as LocalStrategy, Strategy } from "passport-local"
+import { Strategy as LocalStrategy } from "passport-local"
 import passport from "passport"
 import { ExtractJwt, Strategy as JwtStrategy } from "passport-jwt"
 import { SECRET_KEY, GOOGLE_CID, GOOGLE_SECRET } from "../config/config.js"
@@ -55,10 +55,10 @@ export const initPass = () => {
                 try {
                     let user = null
                     if(username.match(/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/)){
-                        user = await usuariosManager.getBy({email: username})
+                        user = await UsuariosService.getBy({email: username})
                         if(!user) throw new Error('Email no registrado')
                     } else {
-                        user = await usuariosManager.getBy({usuario: username})
+                        user = await UsuariosService.getBy({usuario: username})
                         if(!user) throw new Error('Usuario no registrado')
                     }
                     const match = await bcrypt.compare(password, user.pw)
@@ -87,7 +87,7 @@ export const initPass = () => {
             async (tokenAcceso, tokenRefresh, profile, done) => {
                 try {
                     const usuario = profile._json.email.split('@')[0]
-                    const user = await usuariosManager.findOrCreate({usuario: usuario},
+                    const user = await UsuariosService.findOrCreate({usuario: usuario},
                         {
                             usuario: usuario, //en caso de que quiera mas propiedades irian aqui
                             email: profile._json.email,

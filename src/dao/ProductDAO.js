@@ -4,10 +4,9 @@ export class ProductDAO {
 
     async add(producto){
         try {
-            let newProduct = new Product({
+            return await Product.create({
                 ...producto
             })
-            return await newProduct.save()
         } catch (err) {
             console.log(err)
         }

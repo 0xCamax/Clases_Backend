@@ -1,9 +1,9 @@
-import { carritoManager } from "../services/CarritoService.js"
-import { productManager } from "../services/ProductService.js"
+import CarritoService from "../services/CarritoService.js"
+import ProductService from "../services/ProductService.js"
 
 export async function create_cart (req, res) {
     try {
-        let carrito = await carritoManager.create()
+        let carrito = await CarritoService.create()
     
         res.setHeader("Content-Type", "aplication/json")
         return res.status(200).json({
@@ -21,9 +21,9 @@ export async function create_cart (req, res) {
 
 export async function get_cart(req, res) {
     try {
-        let { cid } = req.params
+        const { cid } = req.params
 
-        let carrito = await carritoManager.getCid(cid)
+        const carrito = await CarritoService.getCid(cid)
 
         res.setHeader("Content-Type", "aplication/json")
         return res.status(200).json({
@@ -49,7 +49,7 @@ export async function add_product (req, res) {
         if (!cantidad || isNaN(Number(cantidad)) || Object.keys(req.body).length !== 1) {
             throw new Error ("Input invalido")
         } else {
-            let producto = await productManager.getPid(pid)
+            let producto = await ProductService.getPid(pid)
             if(!producto) {
                 res.setHeader("Content-Type", "aplication/json")
                 return res.status(500).json({
@@ -57,7 +57,7 @@ export async function add_product (req, res) {
                     detalle: `No existe pid: ${pid}`
                 })
             } else {
-                let carrito = await carritoManager.add(cid, producto._id, cantidad)
+                let carrito = await CarritoService.add(cid, producto._id, cantidad)
                 res.setHeader("Content-Type", "aplication/json")
                 return res.status(200).json({
                     status: 'success',
@@ -89,7 +89,7 @@ export async function update_cart(req, res) {
         if (!cantidad || isNaN(Number(cantidad)) || Object.keys(req.body).length !== 1) {
             throw new Error ("Input invalido")
         } else {
-            let producto = await productManager.getPid(pid)
+            let producto = await ProductService.getPid(pid)
             if(!producto) {
                 res.setHeader("Content-Type", "aplication/json")
                 return res.status(500).json({
@@ -97,7 +97,7 @@ export async function update_cart(req, res) {
                     detalle: `No existe pid: ${pid}`
                 })
             } else {    
-                let carrito = await carritoManager.deletePid(cid, producto.id, cantidad)
+                let carrito = await CarritoService.deletePid(cid, producto.id, cantidad)
                 res.setHeader("Content-Type", "aplication/json")
                 return res.status(200).json({
                     status: 'success',
@@ -124,7 +124,7 @@ export async function update_cart(req, res) {
 export async function empty_cart(req, res){
     try{
         let { cid } = req.params
-        let deleteAll = await carritoManager.deleteAll(cid)
+        let deleteAll = await CarritoService.deleteAll(cid)
         res.setHeader("Content-Type", "aplication/json")
         return res.status(200).json({
             status: 'success',

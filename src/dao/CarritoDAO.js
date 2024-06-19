@@ -3,10 +3,9 @@ import { Carrito } from "../models/carritoModel.js"
 export class CarritoDAO {
     async create(){
         try{
-            let carrito = new Carrito()
-            return await carrito.save()
+            return (await new Carrito().save()).toObject()
         } catch (err){
-            return console.log(err)
+            console.log(err)
         }
     }
 
@@ -25,7 +24,7 @@ export class CarritoDAO {
             await Carrito.updateOne({'_id':cid}, {productos: carrito.productos})
             return carrito
         } catch (err){
-            return console.log(err)
+            console.log(err)
         }
     }
 

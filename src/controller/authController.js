@@ -1,5 +1,5 @@
-import { usuariosManager } from "../services/UsuariosService.js"
-import { carritoManager } from "../services/CarritoService.js"
+import UsuariosService from "../services/UsuariosService.js"
+import CarritoService from "../services/CarritoService.js"
 import bcrypt from 'bcrypt'
 import jwt from "jsonwebtoken"
 import { SECRET_KEY } from "../config/config.js"
@@ -37,7 +37,6 @@ export async function login(req, res){
 }
 export async function logout(req, res){
     try {
-
         res.setHeader('Content-Type', 'application/json')
         res.cookie('authToken', '', { httpOnly: true, secure: true, sameSite: 'strict', expires: new Date(0)})
         res.setHeader('Content-Type', 'application/json')
@@ -62,12 +61,12 @@ export async function register(req, res){
             username === is_email &&
             compare
         ) {
-            const carrito = await carritoManager.add()
+            const carrito = await CarritoService.create()
             const hashedPassword = await bcrypt.hash(password, 10)
-            const nuevoUsuario = await usuariosManager.create({
-            email: username,
-            pw: hashedPassword,
-            carrito: carrito.id
+            const nuevoUsuario = await UsuariosService.create({
+                email: username,
+                pw: hashedPassword,
+                carrito: carrito._id
             })
             delete nuevoUsuario.pw
             delete nuevoUsuario.email
@@ -76,9 +75,7 @@ export async function register(req, res){
             res.setHeader('Content-Type', 'application/json')
             return res.status(201).json({
                 status: "success",
-                payload: {
-                    nuevoUsuario
-                }
+                payload: nuevoUsuario
             })
         } else {
             throw new Error('Codigo invalido')
@@ -98,7 +95,7 @@ export async function send_verification(req, res){
         if (!email) {
             throw new Error('Falta email')
             }
-        const exist = await usuariosManager.getBy({email: email})
+        const exist = await UsuariosService.getBy({email: email})
         if (exist){
             throw new Error('El correo ya es utilizado por otro usuario')
         }
@@ -123,14 +120,15 @@ export async function send_verification(req, res){
             `
         }
         const response = await enviar_correo(email, content)
-        if(!response.msssageId) throw new Error('Error al enviar correo, intentalo de nuevo')
+        if(!response.messageId) throw new Error('Error al enviar correo, intentalo de nuevo')
         res.setHeader('Content-Type', 'application/json')
         return res.status(201).json({
             status: "success",
             message: "Se envio el codigo al correo electronico" 
             })
     } catch (err) {
-        res.status(400).json({
+        console.log(err)
+        return res.status(400).json({
             status: 'error', 
             error: err.message
         })
@@ -146,3 +144,4 @@ export async function google_cb(req, res){
         message: 'Usuario autenticado con google'
     })
 }
+

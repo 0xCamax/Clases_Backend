@@ -27,6 +27,7 @@ export const enviar_correo = async (to, content) => {
         console.log('Correo enviado: %s', info.messageId);
         return info;
     } catch (err) {
+        console.log(err)
         return err;
     }
 };

@@ -4,6 +4,7 @@ const get_code = document.getElementById('get_code')
 const registro_form = document.getElementById('registro-form')
 const login_form = document.getElementById('login-form')
 const logout = document.getElementById('logout')
+const code_msg = document.getElementById('code_msg')
 
 
 const api = 'http://localhost:8080/api/auth'
@@ -14,9 +15,9 @@ google? google.onclick = function(){
 
 get_code? get_code.onclick = async function(e){
     e.preventDefault()
+    code_msg.hidden=true
     const url = api + '/send_verification'
     const email = document.getElementById('username').value
-    const code_msg = document.getElementById('code_msg')
     const send_code = await fetch(url, {
         method: 'POST',
         headers: {
@@ -27,8 +28,6 @@ get_code? get_code.onclick = async function(e){
         })
     })
     const data = await send_code.json()
-
-    console.log(data)
 
     code_msg.innerText = data.message ? data.message : data.error
     code_msg.hidden = false

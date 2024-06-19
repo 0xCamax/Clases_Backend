@@ -1,13 +1,13 @@
 import { UsuariosDAO } from "../dao/UsuariosDAO.js"
-import { carritoManager } from "./CarritoService.js"
+import CarritoService from "./CarritoService.js"
 
-class UsuariosImpl extends UsuariosDAO{
+class UsuariosService extends UsuariosDAO{
     async findOrCreate(filtro, info) {
         let user = await this.getBy(filtro)
         if (!user) {
             user = await this.create({
                 ...info,
-                carrito: await carritoManager.create()
+                carrito: await CarritoService.create()
             })
             return user
         } else {
@@ -16,4 +16,4 @@ class UsuariosImpl extends UsuariosDAO{
     }
 }
 
-export const usuariosManager = new UsuariosImpl()
+export default new UsuariosService()

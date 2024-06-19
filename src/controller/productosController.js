@@ -1,4 +1,4 @@
-import { productManager } from "../services/ProductService.js";
+import ProductService from "../services/ProductService.js";
 import { io } from "../main.js";
 
 export async function get_all(req, res){
@@ -22,8 +22,8 @@ export async function get_all(req, res){
             }
         })
 
-        let productos = await productManager.paginate(options)
-        let categorias = await productManager.distinct('categoria')
+        let productos = await ProductService.paginate(options)
+        let categorias = await ProductService.distinct('categoria')
         let {docs, totalPages, hasNextPage, hasPrevPage, prevPage, nextPage, totalDocs, limit, page} = productos
 
         let prevLink = null
@@ -68,7 +68,7 @@ export async function get_all(req, res){
 export async function get_pid(req, res){
     try {
         let { pid } = req.params
-        let producto = await productManager.getPid(pid)
+        let producto = await ProductService.getPid(pid)
         if(!producto){
             throw new Error(`No existe el producto ${pid}`)
         }
@@ -91,7 +91,7 @@ export async function get_pid(req, res){
 
 export async function add_product(req, res){
     try {
-        let newProduct = await productManager.add(req.body)
+        let newProduct = await ProductService.add(req.body)
         io.emit("agregar", newProduct)
         res.setHeader("Content-Type", "aplication/json")
         return res.status(200).json({
@@ -114,7 +114,7 @@ export async function update_product(req, res){
     try {
         let { pid } = req.params
 
-        let update = await productManager.update(pid, req.body)
+        let update = await ProductService.update(pid, req.body)
 
         res.setHeader("Content-Type", "aplication/json")
         return res.status(200).json({
@@ -139,7 +139,7 @@ export async function update_product(req, res){
 export async function delete_product(req, res){
     try {
         let { pid } = req.params
-        let eliminar = await productManager.delete(pid)
+        let eliminar = await ProductService.delete(pid)
         
         if (!eliminar){
             throw new Error(`No existe id: ${pid}`)

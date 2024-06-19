@@ -1,7 +1,7 @@
 import { CarritoDAO } from "../dao/CarritoDAO.js";
 
 
-class CarritoImpl extends CarritoDAO {
+class CarritoService extends CarritoDAO {
 }
 
-export const carritoManager = new CarritoImpl()
+export default new CarritoService()
